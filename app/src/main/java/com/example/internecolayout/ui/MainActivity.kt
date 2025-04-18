@@ -17,7 +17,7 @@ import com.example.internecolayout.ui.component.test.adapter.SimpleAdapter
 
 class MainActivity : AppCompatActivity() {
 
-    private var adapter = SimpleAdapter()
+//    private var adapter = SimpleAdapter()
     private lateinit var binding: ActivityMainBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -30,28 +30,28 @@ class MainActivity : AppCompatActivity() {
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
             insets
         }
-        binding.recyclerView.adapter = adapter
-        binding.recyclerView.layoutManager = LinearLayoutManager(this)
-        val listUser = listOf(User("0", "Natu Nguyen", 19),
-            User("1", "Tuna Nguyen", 19),
-            User("2", "Natu Le", 20),
-            User("3", "Tanu Tran", 29),
-            User("1", "Tuna Nguyen", 19),
-            User("2", "Natu Le", 20),
-            User("3", "Tanu Tran", 29),
-            User("1", "Tuna Nguyen", 19),
-            User("2", "Natu Le", 20),
-            User("3", "Tanu Tran", 29),
-            User("1", "Tuna Nguyen", 19),
-            User("2", "Natu Le", 20),
-            User("3", "Tanu Tran", 29),
-            User("1", "Tuna Nguyen", 19),
-            User("2", "Natu Le", 20),
-            User("3", "Tanu Tran", 29),
-            User("1", "Tuna Nguyen", 19),
-            User("2", "Natu Le", 20),
-            User("3", "Tanu Tran", 29))
-        adapter.submitList(listUser)
+//        binding.recyclerView.adapter = adapter
+//        binding.recyclerView.layoutManager = LinearLayoutManager(this)
+//        val listUser = listOf(User("0", "Natu Nguyen", 19),
+//            User("1", "Tuna Nguyen", 19),
+//            User("2", "Natu Le", 20),
+//            User("3", "Tanu Tran", 29),
+//            User("1", "Tuna Nguyen", 19),
+//            User("2", "Natu Le", 20),
+//            User("3", "Tanu Tran", 29),
+//            User("1", "Tuna Nguyen", 19),
+//            User("2", "Natu Le", 20),
+//            User("3", "Tanu Tran", 29),
+//            User("1", "Tuna Nguyen", 19),
+//            User("2", "Natu Le", 20),
+//            User("3", "Tanu Tran", 29),
+//            User("1", "Tuna Nguyen", 19),
+//            User("2", "Natu Le", 20),
+//            User("3", "Tanu Tran", 29),
+//            User("1", "Tuna Nguyen", 19),
+//            User("2", "Natu Le", 20),
+//            User("3", "Tanu Tran", 29))
+//        adapter.submitList(listUser)
     }
 
 }

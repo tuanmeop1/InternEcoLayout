@@ -1,5 +1,52 @@
 <resources>
-    <string name="app_name">InternEcoLayout</string>
-    <!-- TODO: Remove or change this placeholder text -->
+    <string name="app_name">Photo on Text</string>
+    <string name="app_slogan">Do the right thing</string>
     <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="remove_ads">Remove ads</string>
+    <string name="library">Library</string>
+    <string name="background">Background</string>
+    <string name="my_studio">My Studio</string>
+    <string name="ads_here">ADS here!!</string>
+    <string name="add_new_photo">Add new photo</string>
+    <string name="setting">Setting</string>
+    <string name="settings_and_more">Setting and more</string>
+    <string name="help">Help</string>
+    <string name="about">About</string>
+    <string name="editor">Editor</string>
+    <string name="profile">Profile</string>
+    <string name="header">S2Note</string>
+    <string name="share">Share</string>
+    <string name="home">Home</string>
+    <string name="app_title">Photo on Text</string>
+    <string name="navigation_drawer_open">Open</string>
+    <string name="navigation_drawer_close">Close</string>
+    <string name="app_title_html"><![CDATA[<font color="#FF1493">Photo</font> on Text]]></string>
+
+    <string name="remove_ads_for_the">Remove Ads for the</string>
+    <string name="best_experience">Best Experience</string>
+    <string name="lifetime">Lifetime</string>
+    <string name="one_week">7 Days</string>
+    <string name="monthly">Monthly</string>
+    <string name="one_time_purchase">Onetime Purchase</string>
+    <string name="best_offer">Best Offer</string>
+    <string name="cancel_anytime">Cancel anytime</string>
+    <string name="billed_monthly">Billed monthly. Cancel anytime</string>
+    <string name="subscription_summary">Weekly payments, auto renew, cancel anytime.</string>
+    <string name="string_continue">Continue</string>
+
+    <string name="policy_payment">
+        Payment will be charged to your Google Play account upon confirmation of purchase.
+    </string>
+
+    <string name="policy_auto_renew">
+        Subscription will automatically renew according to the subscription plan you choose unless canceled 24 hours before the end of the current subscription plan.
+    </string>
+
+    <string name="policy_non_subscribed">
+        Non-subscribed users can still use the application however some paid features may be limited.
+    </string>
+
+    <string name="policy_manage">
+        You can manage your subscription or cancel your subscription at any time in.
+    </string>
 </resources>
