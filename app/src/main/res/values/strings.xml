@@ -49,4 +49,44 @@
     <string name="policy_manage">
         You can manage your subscription or cancel your subscription at any time in.
     </string>
+
+    <string name="claim_offer_now">
+        Claim Offer Now
+    </string>
+
+    <string name="black_friday_offer">
+        Black Friday Offer!
+    </string>
+
+    <string name="offer">
+        Get %d%% Off
+    </string>
+
+    <string name="all_premium_editing_tools">
+        All premium editing tools
+    </string>
+
+    <string name="offer_description">
+        $29 first year, then $40/year. Auto renew. Cancel anytime
+    </string>
+
+    <string name="transitions">Transitions</string>
+    <string name="effects">Effects</string>
+    <string name="frames">Frames</string>
+    <string name="to_symbol">\u0020⇒\u0020</string>
+    <string name="price_format">$%.2f/year</string>
+
+    <string name="subscription_terms_prefix">By continuing you agree to our\u0020</string>
+    <string name="subscription_terms">Terms</string>
+    <string name="subscription_privacy">Privacy policies</string>
+    <string name="subscription_items">
+    &#160;&#160;&#8226; Subscription gives you access to Vivishow\'s premium features, all ads will be removed.\n
+    &#160;&#160;&#8226; Subscription plans are automatically renewed and can be canceled anytime in Subscriptions on Google Play.\n
+    &#160;&#160;&#8226; You won’t be charged if subscription is canceled before trial period ends.\n
+    &#160;&#160;&#8226; Subscription is not required to use Vivishow.
+</string>
+    <string name="subscription_item1">&#8226; Subscription gives you access to Vivishow\'s premium features, all ads will be removed.</string>
+    <string name="subscription_item2">&#8226; Subscription plans are automatically renewed and can be canceled anytime in Subscriptions on Google Play.</string>
+    <string name="subscription_item3">&#8226; You won’t be charged if subscription is canceled before trial period ends.</string>
+    <string name="subscription_item4">&#8226; Subscription is not required to use Vivishow.</string>
 </resources>

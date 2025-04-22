@@ -1,10 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout>
+<layout xmlns:tools="http://schemas.android.com/tools"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
-    <merge xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:app="http://schemas.android.com/apk/res-auto"
-        xmlns:tools="http://schemas.android.com/tools"
-        tools:parentTag="androidx.constraintlayout.widget.ConstraintLayout">
+    <merge tools:parentTag="androidx.constraintlayout.widget.ConstraintLayout">
 
         <androidx.appcompat.widget.AppCompatTextView
             android:id="@+id/tvTitle"
@@ -36,13 +35,15 @@
             android:id="@+id/tvPrice"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginHorizontal="@dimen/_3sdp"
-            android:fontFamily="@font/nunito_sans_regular"
+            android:fontFamily="@font/nunito_sans_bold"
             android:textSize="@dimen/_12sdp"
             android:textStyle="bold"
+            app:layout_constraintBottom_toBottomOf="@+id/tvBestOffer"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            tools:text="$27.99" />
+            app:layout_constraintHorizontal_bias="1"
+            app:layout_constraintStart_toEndOf="@+id/tvBestOffer"
+            app:layout_constraintTop_toTopOf="@id/tvBestOffer"
+            tools:text="$27.99 " />
 
         <androidx.appcompat.widget.AppCompatTextView
             android:id="@+id/tvDescription"
@@ -64,13 +65,12 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/_4sdp"
             android:fontFamily="@font/nunito_sans_regular"
-            android:layout_marginHorizontal="@dimen/_3sdp"
             android:textSize="@dimen/_12sdp"
             android:textStyle="italic"
-            app:layout_constraintEnd_toEndOf="@+id/tvPrice"
+            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="@+id/tvPrice"
             app:layout_constraintTop_toBottomOf="@+id/tvPrice"
-            tools:text="$12.99" />
+            tools:text="$12.99 " />
 
     </merge>
 </layout>

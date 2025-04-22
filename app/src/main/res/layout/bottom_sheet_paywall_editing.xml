@@ -1,0 +1,217 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:tools="http://schemas.android.com/tools"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <androidx.core.widget.NestedScrollView
+            android:id="@+id/scrollView2"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/_20sdp"
+            android:background="@drawable/bg_bottom_sheet_paywall_editing"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <androidx.appcompat.widget.AppCompatImageView
+                    android:id="@+id/ivClose"
+                    android:layout_width="@dimen/_20sdp"
+                    android:layout_height="@dimen/_20sdp"
+                    android:src="@drawable/ic_close"
+                    android:scaleType="centerInside"
+                    android:layout_marginTop="@dimen/_8sdp"
+                    android:layout_marginEnd="@dimen/_7sdp"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+                
+                <androidx.appcompat.widget.AppCompatTextView
+                    android:id="@+id/tvPriceOff"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/offer"
+                    android:textColor="@color/off_price_color"
+                    android:textSize="@dimen/_30sdp"
+                    android:fontFamily="@font/roboto_bold"
+                    android:layout_marginTop="40sp"
+                    app:flow_horizontalAlign="center"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <TextView
+                    android:id="@+id/tvAllPremiumTools"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/roboto_regular"
+                    android:text="@string/all_premium_editing_tools"
+                    android:textStyle="bold"
+                    android:textSize="@dimen/_16sdp"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/tvPriceOff" />
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:id="@+id/clTransition"
+                    android:layout_width="0dp"
+                    android:layout_height="0dp"
+                    app:layout_constraintDimensionRatio="100:120"
+                    app:layout_constraintWidth_percent="0.26"
+                    android:layout_marginTop="@dimen/_24sdp"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintEnd_toStartOf="@id/clEffect"
+                    app:layout_constraintTop_toBottomOf="@+id/tvAllPremiumTools">
+
+                    <include
+                        android:id="@+id/transition"
+                        layout="@layout/item_editing_tools" />
+                </androidx.constraintlayout.widget.ConstraintLayout>
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:id="@+id/clEffect"
+                    android:layout_width="0dp"
+                    android:layout_height="0dp"
+                    android:layout_marginTop="@dimen/_24sdp"
+                    app:layout_constraintDimensionRatio="100:120"
+                    app:layout_constraintWidth_percent="0.26"
+                    app:layout_constraintEnd_toStartOf="@id/clFrame"
+                    app:layout_constraintStart_toEndOf="@id/clTransition"
+                    app:layout_constraintTop_toTopOf="@+id/clTransition">
+
+                    <include
+                        android:id="@+id/effect"
+                        layout="@layout/item_editing_tools" />
+                </androidx.constraintlayout.widget.ConstraintLayout>
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:id="@+id/clFrame"
+                    android:layout_width="0dp"
+                    android:layout_height="0dp"
+                    app:layout_constraintDimensionRatio="100:120"
+                    app:layout_constraintWidth_percent="0.26"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toEndOf="@id/clEffect"
+                    app:layout_constraintTop_toTopOf="@+id/clTransition">
+
+                    <include
+                        android:id="@+id/frame"
+                        layout="@layout/item_editing_tools" />
+                </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+                <androidx.appcompat.widget.AppCompatTextView
+                    android:id="@+id/tvPrice"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    tools:text="@string/price_format"
+                    android:textSize="@dimen/_18sdp"
+                    android:fontFamily="@font/roboto_bold"
+                    android:layout_marginTop="@dimen/_12sdp"
+                    android:layout_marginHorizontal="@dimen/_12sdp"
+                    android:textAlignment="center"
+                    app:layout_constraintTop_toBottomOf="@id/clEffect"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"/>
+
+                <androidx.appcompat.widget.LinearLayoutCompat
+                    android:id="@+id/llClaimOffer"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginHorizontal="@dimen/_12sdp"
+                    android:layout_marginTop="@dimen/_12sdp"
+                    android:background="@drawable/bg_claim_offer"
+                    android:gravity="center"
+                    android:paddingVertical="@dimen/_14sdp"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/tvPrice">
+
+                    <androidx.appcompat.widget.AppCompatTextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="@font/roboto_regular"
+                        android:text="@string/claim_offer_now"
+                        android:textColor="@color/white"
+                        android:textSize="@dimen/_14sdp"
+                        android:textStyle="bold" />
+
+                </androidx.appcompat.widget.LinearLayoutCompat>
+
+                <androidx.appcompat.widget.AppCompatTextView
+                    android:id="@+id/tvOfferDescription"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:text="@string/offer_description"
+                    android:textSize="@dimen/_10sdp"
+                    android:maxLines="1"
+                    android:ellipsize="end"
+                    app:autoSizeTextType="uniform"
+                    app:autoSizeMinTextSize="@dimen/_8sdp"
+                    app:autoSizeMaxTextSize="@dimen/_10sdp"
+                    app:autoSizeStepGranularity="@dimen/_1sdp"
+                    android:fontFamily="@font/nunito_sans_regular"
+                    android:textAlignment="center"
+                    android:layout_marginTop="@dimen/_18sdp"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/llClaimOffer"
+                    app:layout_constraintWidth_percent="0.8" />
+
+                <androidx.appcompat.widget.AppCompatTextView
+                    android:id="@+id/tvBulletInfo"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/black"
+                    android:textSize="@dimen/_10sdp"
+                    android:lineSpacingExtra="@dimen/_3sdp"
+                    android:layout_marginHorizontal="@dimen/_16sdp"
+                    android:layout_marginTop="@dimen/_12sdp"
+                    android:layout_marginBottom="@dimen/_10sdp"
+                    tools:text="This is a very loooooong text"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/tvOfferDescription"/>
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+        </androidx.core.widget.NestedScrollView>
+
+        <androidx.appcompat.widget.LinearLayoutCompat
+            android:id="@+id/ivBlackFridayOffer"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:gravity="center"
+            android:background="@drawable/bg_black_friday_offer"
+            app:layout_constraintDimensionRatio="234:40"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintWidth_percent="0.65"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:srcCompat="@drawable/bg_black_friday_offer">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/black_friday_offer"
+                android:textSize="@dimen/_20sdp"
+                android:fontFamily="@font/roboto_bold"
+                android:maxLines="1"
+                android:ellipsize="end"
+                app:autoSizeTextType="uniform"
+                app:autoSizeMinTextSize="@dimen/_12sdp"
+                app:autoSizeMaxTextSize="@dimen/_20sdp"
+                app:autoSizeStepGranularity="@dimen/_1sdp"
+                android:textAlignment="center"
+                android:layout_marginHorizontal="@dimen/_14sdp"/>
+
+        </androidx.appcompat.widget.LinearLayoutCompat>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

@@ -68,18 +68,33 @@
                 app:layout_constraintWidth_percent="0.61" />
 
             <androidx.appcompat.widget.AppCompatTextView
-                android:id="@+id/tvRemoveAds"
+                android:id="@+id/tvRemoveAdsForThe"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginHorizontal="@dimen/_32sdp"
+                android:layout_marginHorizontal="@dimen/_21sdp"
                 android:layout_marginTop="@dimen/_32sdp"
                 android:paddingHorizontal="@dimen/_16sdp"
                 android:textAlignment="center"
-                android:textSize="@dimen/_22sdp"
+                android:textSize="@dimen/_20sdp"
+                android:text="@string/remove_ads_for_the"
+                android:fontFamily="@font/nunito_sans_bold"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/ivPaywallImg"
-                tools:text="Remove Ads for the Best Experience" />
+                app:layout_constraintTop_toBottomOf="@id/ivPaywallImg"/>
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/tvBestExperience"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:paddingHorizontal="@dimen/_16sdp"
+                android:text="@string/best_experience"
+                android:textAlignment="center"
+                android:textSize="@dimen/_28sdp"
+                android:textColor="@color/orange"
+                android:fontFamily="@font/nunito_sans_extra_bold"
+                app:layout_constraintEnd_toEndOf="@+id/tvRemoveAdsForThe"
+                app:layout_constraintStart_toStartOf="@+id/tvRemoveAdsForThe"
+                app:layout_constraintTop_toBottomOf="@id/tvRemoveAdsForThe" />
 
 <!--            <androidx.appcompat.widget.AppCompatImageView-->
 <!--                android:id="@+id/ivDecorator"-->
@@ -103,7 +118,7 @@
                 android:clickable="true"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/tvRemoveAds">
+                app:layout_constraintTop_toBottomOf="@+id/tvBestExperience">
 
                 <include android:id="@+id/lifeTime"
                     layout="@layout/pricing_card_layout" />

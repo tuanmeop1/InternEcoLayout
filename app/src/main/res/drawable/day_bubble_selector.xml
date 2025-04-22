@@ -1,4 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <selector xmlns:android="http://schemas.android.com/apk/res/android">
-  
+    <!-- ngày được chọn (checked) hoặc nhấn (pressed) bạn có thể đổi màu chu vi -->
+    <item android:state_checked="true"
+        android:drawable="@drawable/circle_orange"/>
+    <item android:state_pressed="true"
+        android:drawable="@drawable/circle_orange"/>
+    <!-- mặc định: mọi ngày đều có vòng tròn xám nhạt phía trên -->
+    <item android:drawable="@drawable/circle_gray"/>
 </selector>

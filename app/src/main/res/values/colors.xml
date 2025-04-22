@@ -9,4 +9,7 @@
     <color name="colorPrimaryDark">#1976D2</color>
     <color name="colorAccent">#FF4081</color>
     <color name="orange">#FF9616</color>
+    <color name="red_10">#1AC81912</color>
+    <color name="gray">#9E9E9E</color>
+    <color name="off_price_color">#F34732</color>
 </resources>

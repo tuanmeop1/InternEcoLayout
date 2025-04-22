@@ -15,12 +15,12 @@ import android.text.style.TypefaceSpan
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.annotation.RequiresApi
 import androidx.core.content.ContextCompat
 import androidx.core.content.res.ResourcesCompat
 import androidx.fragment.app.Fragment
 import com.example.internecolayout.R
 import com.example.internecolayout.databinding.FragmentPaywallBinding
+import com.example.internecolayout.ui.component.bottom_sheet.BottomSheetPaywallEditing
 import com.example.internecolayout.utils.CustomTypefaceSpan
 
 
@@ -28,6 +28,7 @@ import com.example.internecolayout.utils.CustomTypefaceSpan
 class PaywallFragment : Fragment() {
     private var _binding: FragmentPaywallBinding? = null
     private val binding get() = _binding!!
+    private lateinit var bottomSheet: BottomSheetPaywallEditing
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -51,10 +52,18 @@ class PaywallFragment : Fragment() {
     private fun initializeData() {
         val firstPart = getString(R.string.remove_ads_for_the)
         val secondPart = getString(R.string.best_experience)
-        val originalPrice = "$32.99"
-        val price = "$27.99"
+        val originalPrice = "$32.99 "
+        val price = "$27.99 "
+        val offPriceValue = 40
+        val oldPrice = 35.00
+        val discountedPrice = 29.99
+
+        if (!::bottomSheet.isInitialized) {
+            bottomSheet = BottomSheetPaywallEditing(offPriceValue, oldPrice, discountedPrice)
+        }
+
         binding.apply {
-            tvRemoveAds.text = setRemoveAdsSpannable(firstPart, secondPart)
+            //tvRemoveAds.text = setRemoveAdsSpannable(firstPart, secondPart)
             tvBulletInfo.text = buildBulletList()
 
             lifeTime.tvOriginalPrice.text = originalPrice
@@ -71,11 +80,16 @@ class PaywallFragment : Fragment() {
             monthLy.tvBestOffer.visibility = View.GONE
             monthLy.tvTitle.text = getString(R.string.monthly)
             monthLy.tvDescription.text = getString(R.string.billed_monthly)
+
         }
+
     }
 
     private fun registerListeners() {
         setupToggleSubscriptionOptions()
+        binding.llContinue.setOnClickListener {
+            bottomSheet.show(parentFragmentManager, "MyBottomSheet")
+        }
     }
 
     private fun setRemoveAdsSpannable(firstPart: String, secondPart: String): SpannableStringBuilder {
