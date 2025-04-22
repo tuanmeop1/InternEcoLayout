@@ -20,6 +20,7 @@ import androidx.core.content.res.ResourcesCompat
 import androidx.fragment.app.Fragment
 import com.example.internecolayout.R
 import com.example.internecolayout.databinding.FragmentPaywallBinding
+import com.example.internecolayout.ui.component.bottom_sheet.BottomSheetDialogPaywall
 import com.example.internecolayout.ui.component.bottom_sheet.BottomSheetPaywallEditing
 import com.example.internecolayout.utils.CustomTypefaceSpan
 
@@ -29,6 +30,7 @@ class PaywallFragment : Fragment() {
     private var _binding: FragmentPaywallBinding? = null
     private val binding get() = _binding!!
     private lateinit var bottomSheet: BottomSheetPaywallEditing
+    private lateinit var paywallDialog: BottomSheetDialogPaywall
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -58,6 +60,12 @@ class PaywallFragment : Fragment() {
         val oldPrice = 35.00
         val discountedPrice = 29.99
 
+        paywallDialog = BottomSheetDialogPaywall(
+            context = requireContext(), // or requireContext() if in Fragment
+            discount = offPriceValue,
+            oldPrice = oldPrice,
+            discountedPrice = discountedPrice
+        )
         if (!::bottomSheet.isInitialized) {
             bottomSheet = BottomSheetPaywallEditing.newInstance(offPriceValue, oldPrice, discountedPrice)
         }
@@ -88,7 +96,8 @@ class PaywallFragment : Fragment() {
     private fun registerListeners() {
         setupToggleSubscriptionOptions()
         binding.llContinue.setOnClickListener {
-            bottomSheet.show(parentFragmentManager, "MyBottomSheet")
+            //bottomSheet.show(parentFragmentManager, "MyBottomSheet")
+            paywallDialog.show()
         }
     }
 

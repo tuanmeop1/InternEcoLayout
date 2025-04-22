@@ -28,21 +28,26 @@ class BottomSheetDialogPaywall(
     private val discountedPrice: Double
 ) : BottomSheetDialog(context) {
 
-    private val binding: BottomSheetPaywallEditingBinding
+    private val binding: BottomSheetPaywallEditingBinding by lazy {
+        BottomSheetPaywallEditingBinding.inflate(LayoutInflater.from(context))
+    }
 
     init {
-        binding = BottomSheetPaywallEditingBinding.inflate(LayoutInflater.from(context))
         setContentView(binding.root)
 
         // Make dialog background transparent
-        findViewById<View>(com.google.android.material.R.id.design_bottom_sheet)?.setBackgroundColor(Color.TRANSPARENT)
-
         initializeData()
         registerListeners()
     }
 
+    override fun show() {
+        super.show()
+        window?.setBackgroundDrawableResource(android.R.color.transparent)
+
+    }
+
     private fun initializeData() {
-        adjustBanner()
+        //adjustBanner()
         setPriceOffValue()
         setEditingToolsDescriptions()
         setPriceTextView()
