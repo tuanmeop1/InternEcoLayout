@@ -80,11 +80,11 @@
     <string name="subscription_terms">Terms</string>
     <string name="subscription_privacy">Privacy policies</string>
     <string name="subscription_items">
-    &#160;&#160;&#8226; Subscription gives you access to Vivishow\'s premium features, all ads will be removed.\n
+    &#160;&#160;&#8226; Subscription gives you access to Vivishow\'s premium features, all ads will be removed.\n \n \n \n \n \n \n \n \n \n \n \n
     &#160;&#160;&#8226; Subscription plans are automatically renewed and can be canceled anytime in Subscriptions on Google Play.\n
     &#160;&#160;&#8226; You won’t be charged if subscription is canceled before trial period ends.\n
     &#160;&#160;&#8226; Subscription is not required to use Vivishow.
-</string>
+    </string>
     <string name="subscription_item1">&#8226; Subscription gives you access to Vivishow\'s premium features, all ads will be removed.</string>
     <string name="subscription_item2">&#8226; Subscription plans are automatically renewed and can be canceled anytime in Subscriptions on Google Play.</string>
     <string name="subscription_item3">&#8226; You won’t be charged if subscription is canceled before trial period ends.</string>

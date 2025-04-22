@@ -3,7 +3,6 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
     <merge
-
         tools:parentTag="androidx.constraintlayout.widget.ConstraintLayout">
 
 
@@ -19,7 +18,7 @@
             app:layout_constraintTop_toTopOf="parent"
             app:shapeAppearanceOverlay="@style/RoundedImage" />
 
-        <TextView
+        <androidx.appcompat.widget.AppCompatTextView
             android:id="@+id/tvQuantity"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -31,16 +30,26 @@
             app:layout_constraintStart_toStartOf="parent"
             tools:text="40+" />
 
-        <TextView
+        <androidx.appcompat.widget.AppCompatTextView
             android:id="@+id/tvTools"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:fontFamily="@font/roboto_regular"
             android:textColor="@color/white"
             android:textSize="@dimen/_8sdp"
             android:textStyle="bold"
-            android:layout_marginBottom="@dimen/_5sdp"
+            android:lineSpacingExtra="0dp"
+            android:maxLines="2"
+            android:layout_marginBottom="@dimen/_6sdp"
+            android:ellipsize="end"
+            android:layout_marginHorizontal="@dimen/_2sdp"
+            app:autoSizeTextType="uniform"
+            app:autoSizeMinTextSize="@dimen/_6sdp"
+            app:autoSizeMaxTextSize="@dimen/_8sdp"
+            app:autoSizeStepGranularity="@dimen/_1sdp"
+            app:layout_constraintHorizontal_bias="0"
             app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="@+id/tvQuantity"
             tools:text="@string/transitions" />
 

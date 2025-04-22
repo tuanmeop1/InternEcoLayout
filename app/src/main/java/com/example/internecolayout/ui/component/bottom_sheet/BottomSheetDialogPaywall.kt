@@ -1,9 +1,8 @@
 package com.example.internecolayout.ui.component.bottom_sheet
 
-import android.app.Dialog
+import android.content.Context
 import android.graphics.Color
 import android.graphics.Typeface
-import android.os.Bundle
 import android.text.SpannableStringBuilder
 import android.text.Spanned
 import android.text.method.LinkMovementMethod
@@ -13,7 +12,6 @@ import android.text.style.StrikethroughSpan
 import android.text.style.UnderlineSpan
 import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
 import android.view.ViewTreeObserver
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.content.ContextCompat
@@ -22,68 +20,29 @@ import com.example.internecolayout.R
 import com.example.internecolayout.databinding.BottomSheetPaywallEditingBinding
 import com.example.internecolayout.utils.CustomTypefaceSpan
 import com.google.android.material.bottomsheet.BottomSheetDialog
-import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 
-class BottomSheetPaywallEditing : BottomSheetDialogFragment() {
-    private lateinit var binding: BottomSheetPaywallEditingBinding
+class BottomSheetDialogPaywall(
+    context: Context,
+    private val discount: Int,
+    private val oldPrice: Double,
+    private val discountedPrice: Double
+) : BottomSheetDialog(context) {
 
-    private var discount: Int = 0
-    private var oldPrice: Double = 0.0
-    private var discountedPrice: Double = 0.0
+    private val binding: BottomSheetPaywallEditingBinding
 
-    companion object {
-        fun newInstance(discount: Int, oldPrice: Double, discountedPrice: Double): BottomSheetPaywallEditing {
-            val fragment = BottomSheetPaywallEditing()
-            val args = Bundle().apply {
-                putInt("discount", discount)
-                putDouble("oldPrice", oldPrice)
-                putDouble("discountedPrice", discountedPrice)
-            }
-            fragment.arguments = args
-            return fragment
-        }
-    }
+    init {
+        binding = BottomSheetPaywallEditingBinding.inflate(LayoutInflater.from(context))
+        setContentView(binding.root)
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        arguments?.let {
-            discount = it.getInt("discount")
-            oldPrice = it.getDouble("oldPrice")
-            discountedPrice = it.getDouble("discountedPrice")
-        }
-    }
+        // Make dialog background transparent
+        findViewById<View>(com.google.android.material.R.id.design_bottom_sheet)?.setBackgroundColor(Color.TRANSPARENT)
 
-    override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View {
-        binding = BottomSheetPaywallEditingBinding.inflate(
-            inflater,
-            container,
-            false
-        )
-
-        return binding.root
-    }
-
-    override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
-        val dialog = super.onCreateDialog(savedInstanceState) as BottomSheetDialog
-        dialog.setOnShowListener {
-            val bottomSheet = dialog.findViewById<View>(com.google.android.material.R.id.design_bottom_sheet)
-            bottomSheet?.setBackgroundColor(Color.TRANSPARENT)
-        }
-        return dialog
-    }
-
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
         initializeData()
         registerListeners()
     }
 
     private fun initializeData() {
-        //adjustBanner()
+        adjustBanner()
         setPriceOffValue()
         setEditingToolsDescriptions()
         setPriceTextView()
@@ -112,16 +71,15 @@ class BottomSheetPaywallEditing : BottomSheetDialogFragment() {
     }
 
     private fun setPriceOffValue() {
-        binding.tvPriceOff.text = getString(R.string.offer, discount)
+        binding.tvPriceOff.text = context.getString(R.string.offer, discount)
     }
 
     private fun setPriceTextView() {
-        val context = requireContext()
         val grayColor = ContextCompat.getColor(context, R.color.gray)
 
-        val original = getString(R.string.price_format, oldPrice.toFloat())
-        val toSymbol = getString(R.string.to_symbol)
-        val discounted = getString(R.string.price_format, discountedPrice.toFloat())
+        val original = context.getString(R.string.price_format, oldPrice.toFloat())
+        val toSymbol = context.getString(R.string.to_symbol)
+        val discounted = context.getString(R.string.price_format, discountedPrice.toFloat())
 
         val fullText = "$original$toSymbol$discounted"
         val spannable = SpannableStringBuilder(fullText)
@@ -129,10 +87,9 @@ class BottomSheetPaywallEditing : BottomSheetDialogFragment() {
         val originalStart = 0
         val originalEnd = original.length
         val symbolEnd = originalEnd + toSymbol.length
-        val discountedEnd = fullText.length
 
         val firstTypeFace = Typeface.create(
-            ResourcesCompat.getFont(requireContext(), R.font.roboto_regular), Typeface.NORMAL
+            ResourcesCompat.getFont(context, R.font.roboto_regular), Typeface.NORMAL
         )
         spannable.setSpan(
             StrikethroughSpan(),
@@ -162,9 +119,9 @@ class BottomSheetPaywallEditing : BottomSheetDialogFragment() {
             effect.tvQuantity.text = formatRoundedNumber(50)
             frame.tvQuantity.text = formatRoundedNumber(50)
 
-            transition.tvTools.text = getString(R.string.transitions)
-            effect.tvTools.text = getString(R.string.effects)
-            frame.tvTools.text = getString(R.string.frames)
+            transition.tvTools.text = context.getString(R.string.transitions)
+            effect.tvTools.text = context.getString(R.string.effects)
+            frame.tvTools.text = context.getString(R.string.frames)
 
             transition.shapeableImageView.setImageResource(R.drawable.img_transition)
             effect.shapeableImageView.setImageResource(R.drawable.img_effect)
@@ -173,9 +130,9 @@ class BottomSheetPaywallEditing : BottomSheetDialogFragment() {
     }
 
     private fun setUpPrivacyAndPolicyTextView() {
-        val prefix = getString(R.string.subscription_terms_prefix)
-        val terms = getString(R.string.subscription_terms)
-        val privacy = getString(R.string.subscription_privacy)
+        val prefix = context.getString(R.string.subscription_terms_prefix)
+        val terms = context.getString(R.string.subscription_terms)
+        val privacy = context.getString(R.string.subscription_privacy)
 
         val fullIntro = "$prefix$terms and $privacy."
         val spannable = SpannableStringBuilder(fullIntro)
@@ -184,7 +141,7 @@ class BottomSheetPaywallEditing : BottomSheetDialogFragment() {
         spannable.setSpan(UnderlineSpan(), termsStart, termsStart + terms.length, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
         spannable.setSpan(object : ClickableSpan() {
             override fun onClick(widget: View) {
-                // Mở link Terms
+                // Open Terms link
             }
         }, termsStart, termsStart + terms.length, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
 
@@ -192,20 +149,20 @@ class BottomSheetPaywallEditing : BottomSheetDialogFragment() {
         spannable.setSpan(UnderlineSpan(), privacyStart, privacyStart + privacy.length, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
         spannable.setSpan(object : ClickableSpan() {
             override fun onClick(widget: View) {
-                // Mở link Privacy
+                // Open Privacy link
             }
         }, privacyStart, privacyStart + privacy.length, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
 
         val finalText = SpannableStringBuilder()
             .append(spannable)
             .append("\n")
-            .append(getString(R.string.subscription_item1))
+            .append(context.getString(R.string.subscription_item1))
             .append("\n")
-            .append(getString(R.string.subscription_item2))
+            .append(context.getString(R.string.subscription_item2))
             .append("\n")
-            .append(getString(R.string.subscription_item3))
+            .append(context.getString(R.string.subscription_item3))
             .append("\n")
-            .append(getString(R.string.subscription_item4))
+            .append(context.getString(R.string.subscription_item4))
 
         val tv = binding.tvBulletInfo
         tv.text = finalText

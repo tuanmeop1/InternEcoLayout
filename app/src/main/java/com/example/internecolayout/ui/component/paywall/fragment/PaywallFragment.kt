@@ -59,7 +59,7 @@ class PaywallFragment : Fragment() {
         val discountedPrice = 29.99
 
         if (!::bottomSheet.isInitialized) {
-            bottomSheet = BottomSheetPaywallEditing(offPriceValue, oldPrice, discountedPrice)
+            bottomSheet = BottomSheetPaywallEditing.newInstance(offPriceValue, oldPrice, discountedPrice)
         }
 
         binding.apply {
