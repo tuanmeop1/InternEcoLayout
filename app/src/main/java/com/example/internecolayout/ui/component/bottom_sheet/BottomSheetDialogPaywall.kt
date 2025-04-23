@@ -1,5 +1,6 @@
 package com.example.internecolayout.ui.component.bottom_sheet
 
+import android.app.Dialog
 import android.content.Context
 import android.graphics.Color
 import android.graphics.Typeface
@@ -27,7 +28,7 @@ class BottomSheetDialogPaywall(
     private val discount: Int,
     private val oldPrice: Double,
     private val discountedPrice: Double
-) : BottomSheetDialog(context, R.style.TransparentBottomSheetStyle) {
+) : BottomSheetDialog(context) {
 
     private val binding: BottomSheetPaywallEditingBinding by lazy {
         BottomSheetPaywallEditingBinding.inflate(LayoutInflater.from(context))
@@ -37,6 +38,15 @@ class BottomSheetDialogPaywall(
         setContentView(binding.root)
         initializeData()
         registerListeners()
+    }
+
+    override fun show() {
+        super.show()
+
+        val bottomSheet = findViewById<View>(com.google.android.material.R.id.design_bottom_sheet)
+        bottomSheet?.post {
+            bottomSheet.setBackgroundColor(Color.TRANSPARENT)
+        }
     }
 
     private fun initializeData() {
