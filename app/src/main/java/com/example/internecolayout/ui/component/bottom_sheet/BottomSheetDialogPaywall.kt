@@ -3,6 +3,7 @@ package com.example.internecolayout.ui.component.bottom_sheet
 import android.content.Context
 import android.graphics.Color
 import android.graphics.Typeface
+import android.os.Bundle
 import android.text.SpannableStringBuilder
 import android.text.Spanned
 import android.text.method.LinkMovementMethod
@@ -26,7 +27,7 @@ class BottomSheetDialogPaywall(
     private val discount: Int,
     private val oldPrice: Double,
     private val discountedPrice: Double
-) : BottomSheetDialog(context) {
+) : BottomSheetDialog(context, R.style.TransparentBottomSheetStyle) {
 
     private val binding: BottomSheetPaywallEditingBinding by lazy {
         BottomSheetPaywallEditingBinding.inflate(LayoutInflater.from(context))
@@ -34,16 +35,8 @@ class BottomSheetDialogPaywall(
 
     init {
         setContentView(binding.root)
-
-        // Make dialog background transparent
         initializeData()
         registerListeners()
-    }
-
-    override fun show() {
-        super.show()
-        window?.setBackgroundDrawableResource(android.R.color.transparent)
-
     }
 
     private fun initializeData() {
