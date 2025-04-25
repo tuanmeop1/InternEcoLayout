@@ -215,6 +215,49 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/llContinue"/>
+
+            <androidx.appcompat.widget.LinearLayoutCompat
+                android:id="@+id/llPremium"
+                android:layout_width="0dp"
+                android:layout_height="@dimen/_50sdp"
+                android:gravity="center"
+                android:background="@drawable/bg_claim_offer"
+                android:layout_marginTop="@dimen/_12sdp"
+                app:layout_constraintEnd_toEndOf="@+id/tvBulletInfo"
+                app:layout_constraintTop_toBottomOf="@+id/tvBulletInfo"
+                app:layout_constraintStart_toStartOf="@+id/tvBulletInfo">
+
+                <androidx.appcompat.widget.AppCompatTextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/premium"
+                    android:textColor="@color/white"
+                    android:textSize="@dimen/_20sdp"
+                    android:fontFamily="@font/nunito_sans_semi_bold" />
+
+            </androidx.appcompat.widget.LinearLayoutCompat>
+
+            <androidx.appcompat.widget.LinearLayoutCompat
+                android:id="@+id/llFeature"
+                android:layout_width="0dp"
+                android:layout_height="@dimen/_50sdp"
+                android:gravity="center"
+                android:background="@drawable/bg_claim_offer_orange"
+                android:layout_marginTop="@dimen/_12sdp"
+                app:layout_constraintEnd_toEndOf="@+id/llPremium"
+                app:layout_constraintTop_toBottomOf="@+id/llPremium"
+                app:layout_constraintStart_toStartOf="@+id/llPremium">
+
+                <androidx.appcompat.widget.AppCompatTextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/feature"
+                    android:textColor="@color/white"
+                    android:textSize="@dimen/_20sdp"
+                    android:fontFamily="@font/nunito_sans_semi_bold" />
+
+            </androidx.appcompat.widget.LinearLayoutCompat>
+
         </androidx.constraintlayout.widget.ConstraintLayout>
     </androidx.core.widget.NestedScrollView>
 </layout>

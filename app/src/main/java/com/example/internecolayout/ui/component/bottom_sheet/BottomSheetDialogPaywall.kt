@@ -8,10 +8,12 @@ import android.os.Bundle
 import android.text.SpannableStringBuilder
 import android.text.Spanned
 import android.text.method.LinkMovementMethod
+import android.text.style.BulletSpan
 import android.text.style.ClickableSpan
 import android.text.style.ForegroundColorSpan
 import android.text.style.StrikethroughSpan
 import android.text.style.UnderlineSpan
+import android.util.TypedValue
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewTreeObserver
@@ -21,6 +23,7 @@ import androidx.core.content.res.ResourcesCompat
 import com.example.internecolayout.R
 import com.example.internecolayout.databinding.BottomSheetPaywallEditingBinding
 import com.example.internecolayout.utils.CustomTypefaceSpan
+import com.example.internecolayout.utils.setPolicyText
 import com.google.android.material.bottomsheet.BottomSheetDialog
 
 class BottomSheetDialogPaywall(
@@ -54,7 +57,7 @@ class BottomSheetDialogPaywall(
         setPriceOffValue()
         setEditingToolsDescriptions()
         setPriceTextView()
-        setUpPrivacyAndPolicyTextView()
+        setUpPrivacyTextView()
     }
 
     private fun registerListeners() {
@@ -137,45 +140,18 @@ class BottomSheetDialogPaywall(
         }
     }
 
-    private fun setUpPrivacyAndPolicyTextView() {
-        val prefix = context.getString(R.string.subscription_terms_prefix)
-        val terms = context.getString(R.string.subscription_terms)
-        val privacy = context.getString(R.string.subscription_privacy)
+    private fun setUpPrivacyTextView() {
+        val bulletStrings = context.resources.getStringArray(R.array.subscription_items).toList()
 
-        val fullIntro = "$prefix$terms and $privacy."
-        val spannable = SpannableStringBuilder(fullIntro)
-
-        val termsStart = fullIntro.indexOf(terms)
-        spannable.setSpan(UnderlineSpan(), termsStart, termsStart + terms.length, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
-        spannable.setSpan(object : ClickableSpan() {
-            override fun onClick(widget: View) {
-                // Open Terms link
-            }
-        }, termsStart, termsStart + terms.length, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
-
-        val privacyStart = fullIntro.indexOf(privacy)
-        spannable.setSpan(UnderlineSpan(), privacyStart, privacyStart + privacy.length, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
-        spannable.setSpan(object : ClickableSpan() {
-            override fun onClick(widget: View) {
-                // Open Privacy link
-            }
-        }, privacyStart, privacyStart + privacy.length, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
-
-        val finalText = SpannableStringBuilder()
-            .append(spannable)
-            .append("\n")
-            .append(context.getString(R.string.subscription_item1))
-            .append("\n")
-            .append(context.getString(R.string.subscription_item2))
-            .append("\n")
-            .append(context.getString(R.string.subscription_item3))
-            .append("\n")
-            .append(context.getString(R.string.subscription_item4))
-
-        val tv = binding.tvBulletInfo
-        tv.text = finalText
-        tv.movementMethod = LinkMovementMethod.getInstance()
-        tv.highlightColor = Color.TRANSPARENT
+        binding.tvPolicy.setPolicyText(
+            onTermsClick = {
+                // handle terms click
+            },
+            onPrivacyClick = {
+                // handle privacy click
+            },
+            bulletTextList = bulletStrings
+        )
     }
 
     private fun formatRoundedNumber(number: Int): String {

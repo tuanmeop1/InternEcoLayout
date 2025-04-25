@@ -1,0 +1,338 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <ScrollView
+        android:id="@+id/svSubscription"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/bg_feature">
+
+            <androidx.appcompat.widget.AppCompatImageView
+                android:id="@+id/ivClose"
+                android:layout_width="@dimen/_24sdp"
+                android:layout_height="@dimen/_24sdp"
+                android:layout_marginTop="@dimen/_8sdp"
+                android:layout_marginEnd="@dimen/_12sdp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:srcCompat="@drawable/ic_close" />
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/tvPaywallTitle1"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="@dimen/_14sdp"
+                android:layout_marginTop="@dimen/_40sdp"
+                android:text="@string/unlimited_access"
+                android:textAlignment="center"
+                android:textSize="@dimen/_28sdp"
+                android:maxLines="2"
+                android:fontFamily="@font/roboto_medium"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/tvPaywallTitle2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="@dimen/_14sdp"
+                android:drawableEnd="@drawable/ic_pro"
+                android:text="@string/to_vivishow"
+                android:textAlignment="center"
+                android:textSize="@dimen/_28sdp"
+                android:fontFamily="@font/roboto_bold"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/tvPaywallTitle1" />
+
+            <androidx.appcompat.widget.AppCompatImageView
+                android:id="@+id/ivSparkle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/_28sdp"
+
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toStartOf="@id/ivRemove"
+                app:layout_constraintTop_toBottomOf="@id/tvPaywallTitle2"
+                app:srcCompat="@drawable/ic_sparkle" />
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/tvEffect"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/_6sdp"
+                android:fontFamily="@font/roboto_regular"
+                android:maxLines="2"
+                android:text="@string/feature_effects"
+                android:textAlignment="center"
+                android:textSize="@dimen/_10sdp"
+                app:autoSizeMaxTextSize="@dimen/_10sdp"
+                app:autoSizeMinTextSize="@dimen/_6sdp"
+                app:autoSizeTextType="uniform"
+                app:layout_constraintEnd_toEndOf="@+id/ivSparkle"
+                app:layout_constraintStart_toStartOf="@+id/ivSparkle"
+                app:layout_constraintTop_toBottomOf="@+id/ivSparkle"
+                app:layout_constraintWidth_percent="0.225" />
+
+            <androidx.appcompat.widget.AppCompatImageView
+                android:id="@+id/ivRemove"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/_28sdp"
+                app:layout_constraintEnd_toStartOf="@+id/ivNoAds"
+                app:layout_constraintStart_toEndOf="@id/ivSparkle"
+                app:layout_constraintTop_toBottomOf="@id/tvPaywallTitle2"
+                app:srcCompat="@drawable/ic_remove" />
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/tvWatermark"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/roboto_regular"
+                android:maxLines="2"
+                android:text="@string/feature_watermark"
+                android:textAlignment="center"
+                android:textSize="@dimen/_10sdp"
+                app:autoSizeMaxTextSize="@dimen/_10sdp"
+                app:autoSizeMinTextSize="@dimen/_8sdp"
+                app:autoSizeTextType="uniform"
+                app:layout_constraintBottom_toBottomOf="@+id/tvEffect"
+                app:layout_constraintEnd_toEndOf="@+id/ivRemove"
+                app:layout_constraintStart_toStartOf="@+id/ivRemove"
+                app:layout_constraintTop_toTopOf="@+id/tvEffect"
+                app:layout_constraintWidth_percent="0.225" />
+
+            <androidx.appcompat.widget.AppCompatImageView
+                android:id="@+id/ivNoAds"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/_28sdp"
+                app:layout_constraintDimensionRatio="25:24"
+                app:layout_constraintStart_toEndOf="@id/ivRemove"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/tvPaywallTitle2"
+                app:srcCompat="@drawable/ic_no_ads" />
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/tvNoAds"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/roboto_regular"
+                android:maxLines="2"
+                android:text="@string/feature_ad_free"
+                android:textAlignment="center"
+                android:textSize="@dimen/_10sdp"
+                app:autoSizeMaxTextSize="@dimen/_10sdp"
+                app:autoSizeMinTextSize="@dimen/_6sdp"
+                app:autoSizeTextType="uniform"
+                app:layout_constraintBottom_toBottomOf="@+id/tvWatermark"
+                app:layout_constraintEnd_toEndOf="@+id/ivNoAds"
+                app:layout_constraintStart_toStartOf="@+id/ivNoAds"
+                app:layout_constraintTop_toTopOf="@+id/tvWatermark"
+                app:layout_constraintWidth_percent="0.225" />
+
+            <androidx.appcompat.widget.AppCompatImageView
+                android:id="@+id/ivQuality"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginVertical="@dimen/_14sdp"
+                app:layout_constraintEnd_toStartOf="@id/ivImageSlideShow"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/tvWatermark"
+                app:srcCompat="@drawable/ic_quality" />
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/tvQuality"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/_6sdp"
+                android:fontFamily="@font/roboto_regular"
+                android:maxLines="2"
+                android:text="@string/high_quality_export"
+                android:textAlignment="center"
+                android:textSize="@dimen/_10sdp"
+                app:autoSizeMaxTextSize="@dimen/_10sdp"
+                app:autoSizeMinTextSize="@dimen/_6sdp"
+                app:autoSizeTextType="uniform"
+                app:layout_constraintEnd_toEndOf="@+id/ivQuality"
+                app:layout_constraintStart_toStartOf="@+id/ivQuality"
+                app:layout_constraintTop_toBottomOf="@+id/ivQuality"
+                app:layout_constraintWidth_percent="0.225" />
+
+            <androidx.appcompat.widget.AppCompatImageView
+                android:id="@+id/ivImageSlideShow"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginVertical="@dimen/_14sdp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toEndOf="@id/ivQuality"
+                app:layout_constraintTop_toBottomOf="@id/tvWatermark"
+                app:srcCompat="@drawable/ic_image_slideshow" />
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/tvUnlock"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/roboto_regular"
+                android:maxLines="2"
+                android:text="@string/feature_unlock"
+                android:textAlignment="center"
+                android:textSize="@dimen/_10sdp"
+                app:autoSizeMaxTextSize="@dimen/_10sdp"
+                app:autoSizeMinTextSize="@dimen/_6sdp"
+                app:autoSizeTextType="uniform"
+                app:layout_constraintBottom_toBottomOf="@+id/tvQuality"
+                app:layout_constraintEnd_toEndOf="@+id/ivImageSlideShow"
+                app:layout_constraintStart_toStartOf="@+id/ivImageSlideShow"
+                app:layout_constraintTop_toTopOf="@+id/tvQuality"
+                app:layout_constraintWidth_percent="0.225" />
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/clFreeTrial"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="@dimen/_14sdp"
+                android:layout_marginTop="@dimen/_20sdp"
+                android:clickable="true"
+                android:focusable="true"
+                android:background="@drawable/bg_subscription_card_selector_orange"
+                android:paddingHorizontal="@dimen/_8sdp"
+                android:paddingVertical="@dimen/_6sdp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/tvUnlock">
+
+                <include
+                    android:id="@+id/mFreeTrial"
+                    layout="@layout/item_subscription_card" />
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/tvBestDeal"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="@dimen/_10sdp"
+                app:drawableStartCompat="@drawable/ic_flash"
+                android:background="@drawable/bg_best_deal"
+                android:fontFamily="@font/roboto_bold"
+                android:maxLines="1"
+                android:paddingHorizontal="@dimen/_6sdp"
+                android:paddingVertical="@dimen/_3sdp"
+                android:text="@string/best_deal"
+                android:textColor="@color/white"
+                android:textSize="@dimen/_8sdp"
+                app:autoSizeMaxTextSize="@dimen/_8sdp"
+                app:autoSizeMinTextSize="@dimen/_5sdp"
+                app:autoSizeTextType="uniform"
+                app:layout_constraintBottom_toTopOf="@id/clFreeTrial"
+                app:layout_constraintEnd_toEndOf="@id/clFreeTrial"
+                app:layout_constraintTop_toTopOf="@id/clFreeTrial" />
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/clMonthly"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/_8sdp"
+                android:clickable="true"
+                android:focusable="true"
+                android:background="@drawable/bg_subscription_card_selector_orange"
+                android:paddingHorizontal="@dimen/_8sdp"
+                android:paddingVertical="@dimen/_6sdp"
+                app:layout_constraintEnd_toEndOf="@id/clFreeTrial"
+                app:layout_constraintStart_toStartOf="@id/clFreeTrial"
+                app:layout_constraintTop_toBottomOf="@id/clFreeTrial">
+
+                <include
+                    android:id="@+id/mMonthly"
+                    layout="@layout/item_subscription_card" />
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/clLifetime"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:clickable="true"
+                android:focusable="true"
+                android:background="@drawable/bg_subscription_card_selector_orange"
+                android:paddingHorizontal="@dimen/_8sdp"
+                android:paddingVertical="@dimen/_6sdp"
+                app:layout_constraintEnd_toEndOf="@id/clMonthly"
+                app:layout_constraintStart_toStartOf="@id/clMonthly"
+                app:layout_constraintTop_toBottomOf="@id/clMonthly">
+
+                <include
+                    android:id="@+id/mLifetime"
+                    layout="@layout/item_subscription_card" />
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+            <androidx.appcompat.widget.LinearLayoutCompat
+                android:id="@+id/llStartFreeTrial"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/_12sdp"
+                android:background="@drawable/bg_claim_offer_orange"
+                android:gravity="center"
+                android:paddingVertical="@dimen/_14sdp"
+                app:layout_constraintEnd_toEndOf="@+id/clLifetime"
+                app:layout_constraintStart_toStartOf="@+id/clLifetime"
+                app:layout_constraintTop_toBottomOf="@+id/clLifetime">
+
+                <androidx.appcompat.widget.AppCompatTextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/roboto_regular"
+                    android:text="@string/start_free_trial"
+                    android:textColor="@color/white"
+                    android:textSize="@dimen/_16sdp"
+                    android:textStyle="bold" />
+
+            </androidx.appcompat.widget.LinearLayoutCompat>
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/tvLimited"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/_8sdp"
+                android:fontFamily="@font/roboto_regular"
+                android:includeFontPadding="false"
+                android:paddingVertical="@dimen/_2sdp"
+                android:text="@string/use_limited_version"
+                android:textAlignment="center"
+                android:textColor="@color/paywall_black"
+                android:textSize="@dimen/_10sdp"
+                app:fontFamily="@font/roboto_regular"
+                app:autoSizeMaxTextSize="@dimen/_10sdp"
+                app:autoSizeMinTextSize="@dimen/_6sdp"
+                app:autoSizeTextType="uniform"
+                android:ellipsize="end"
+                android:maxLines="1"
+                app:layout_constraintEnd_toEndOf="@id/llStartFreeTrial"
+                app:layout_constraintStart_toStartOf="@id/llStartFreeTrial"
+                app:layout_constraintTop_toBottomOf="@id/llStartFreeTrial" />
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/tvPolicy"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/_4sdp"
+                android:fontFamily="@font/roboto_regular"
+                android:includeFontPadding="false"
+                android:lineSpacingExtra="@dimen/_2sdp"
+                android:paddingVertical="@dimen/_1sdp"
+                android:text="@string/policy_auto_renew"
+                android:textSize="@dimen/_10sdp"
+                android:textColor="@color/gray"
+                app:layout_constraintEnd_toEndOf="@id/tvLimited"
+                app:layout_constraintStart_toStartOf="@id/tvLimited"
+                app:layout_constraintTop_toBottomOf="@id/tvLimited" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </ScrollView>
+
+</layout>

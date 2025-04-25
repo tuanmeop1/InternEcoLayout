@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <merge tools:parentTag="androidx.constraintlayout.widget.ConstraintLayout">
+
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/ivCheckButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:srcCompat="@drawable/bg_check_button_selector"
+            android:layout_marginVertical="@dimen/_14sdp"
+            app:layout_constraintEnd_toStartOf="@+id/tvFreeDay"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"/>
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/tvTitle"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/roboto_medium"
+            android:maxLines="1"
+            android:paddingHorizontal="@dimen/_8sdp"
+            android:paddingVertical="@dimen/_2sdp"
+            android:text="@string/free_trial"
+            android:textSize="@dimen/_14sdp"
+            app:autoSizeMaxTextSize="@dimen/_14sdp"
+            app:autoSizeMinTextSize="@dimen/_12sdp"
+            app:autoSizeTextType="uniform"
+            app:layout_constraintEnd_toStartOf="@+id/tvPrice"
+            app:layout_constraintStart_toEndOf="@id/ivCheckButton"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/tvDescription"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/roboto_regular"
+            android:maxLines="1"
+            android:paddingHorizontal="@dimen/_8sdp"
+            android:paddingVertical="@dimen/_2sdp"
+            android:text="@string/monthly_description"
+            android:textSize="@dimen/_10sdp"
+            app:autoSizeMaxTextSize="@dimen/_10sdp"
+            app:autoSizeMinTextSize="@dimen/_8sdp"
+            app:autoSizeTextType="uniform"
+            app:layout_constraintEnd_toStartOf="@+id/tvPeriod"
+            app:layout_constraintStart_toStartOf="@+id/tvTitle"
+            app:layout_constraintTop_toBottomOf="@+id/tvTitle" />
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/tvPrice"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/roboto_medium"
+            android:maxLines="1"
+            android:paddingHorizontal="@dimen/_4sdp"
+            android:paddingVertical="@dimen/_2sdp"
+            android:text="@string/free_trial_price"
+            android:textAlignment="textEnd"
+            android:textSize="@dimen/_14sdp"
+            app:autoSizeMaxTextSize="@dimen/_14sdp"
+            app:autoSizeMinTextSize="@dimen/_12sdp"
+            app:autoSizeTextType="uniform"
+            app:layout_constraintBottom_toBottomOf="@+id/tvFreeDay"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/tvPeriod"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/roboto_regular"
+            android:maxLines="1"
+            android:includeFontPadding="false"
+            android:paddingHorizontal="@dimen/_2sdp"
+            android:paddingVertical="@dimen/_4sdp"
+            android:text="@string/free_trial_price_period"
+            android:textAlignment="textEnd"
+            android:textSize="@dimen/_10sdp"
+            android:textStyle="italic"
+            app:autoSizeMaxTextSize="@dimen/_10sdp"
+            app:autoSizeMinTextSize="@dimen/_8sdp"
+            app:autoSizeTextType="uniform"
+            app:layout_constraintHorizontal_bias="1"
+            app:layout_constraintBottom_toBottomOf="@id/tvDescription"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/tvDescription"
+            app:layout_constraintTop_toBottomOf="@+id/tvPrice" />
+    </merge>
+</layout>

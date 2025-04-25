@@ -18,6 +18,7 @@ import android.view.ViewGroup
 import androidx.core.content.ContextCompat
 import androidx.core.content.res.ResourcesCompat
 import androidx.fragment.app.Fragment
+import androidx.navigation.fragment.findNavController
 import com.example.internecolayout.R
 import com.example.internecolayout.databinding.FragmentPaywallBinding
 import com.example.internecolayout.ui.component.bottom_sheet.BottomSheetDialogPaywall
@@ -95,44 +96,53 @@ class PaywallFragment : Fragment() {
 
     private fun registerListeners() {
         setupToggleSubscriptionOptions()
-        binding.llContinue.setOnClickListener {
-            //bottomSheet.show(parentFragmentManager, "MyBottomSheet")
-            paywallDialog.show()
+        binding.apply {
+            llContinue.setOnClickListener {
+                //bottomSheet.show(parentFragmentManager, "MyBottomSheet")
+                paywallDialog.show()
+            }
+
+            llPremium.setOnClickListener {
+                findNavController().navigate(R.id.action_paywallFragment_to_paywallPremiumFragment)
+            }
+
+            llFeature.setOnClickListener {
+                findNavController().navigate(R.id.action_paywallFragment_to_paywallFeatureFragment)
+            }
         }
     }
 
-    private fun setRemoveAdsSpannable(firstPart: String, secondPart: String): SpannableStringBuilder {
-        val firstPartSize = resources.getDimension(com.intuit.sdp.R.dimen._24sdp)
-        val secondPartSize = resources.getDimension(com.intuit.sdp.R.dimen._32sdp)
-        val textSizeRatioPart2ToPart1 = secondPartSize / firstPartSize
-
-        val firstTypeFace = Typeface.create(
-            ResourcesCompat.getFont(requireContext(), R.font.nunito_sans_bold), Typeface.NORMAL
-        )
-
-        val secondTypeFace = Typeface.create(
-            ResourcesCompat.getFont(requireContext(), R.font.nunito_sans_extra_bold), Typeface.NORMAL
-        )
-
-        val firstPartStyled = SpannableString(firstPart).apply {
-            setSpan(CustomTypefaceSpan(firstTypeFace), 0, firstPart.length, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
-        }
-
-        val secondPartStyled = SpannableString(secondPart).apply {
-            setSpan(CustomTypefaceSpan(secondTypeFace), 0, secondPart.length, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
-            setSpan(ForegroundColorSpan(ContextCompat.getColor(requireContext(), R.color.orange)), 0, secondPart.length, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
-            setSpan(RelativeSizeSpan(textSizeRatioPart2ToPart1), 0, secondPart.length, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
-        }
-
-        val result = SpannableStringBuilder().apply {
-            append(firstPartStyled)
-            append("\n")
-            append(secondPartStyled)
-        }
-
-        return result
-    }
-
+//    private fun setRemoveAdsSpannable(firstPart: String, secondPart: String): SpannableStringBuilder {
+//        val firstPartSize = resources.getDimension(com.intuit.sdp.R.dimen._24sdp)
+//        val secondPartSize = resources.getDimension(com.intuit.sdp.R.dimen._32sdp)
+//        val textSizeRatioPart2ToPart1 = secondPartSize / firstPartSize
+//
+//        val firstTypeFace = Typeface.create(
+//            ResourcesCompat.getFont(requireContext(), R.font.nunito_sans_bold), Typeface.NORMAL
+//        )
+//
+//        val secondTypeFace = Typeface.create(
+//            ResourcesCompat.getFont(requireContext(), R.font.nunito_sans_extra_bold), Typeface.NORMAL
+//        )
+//
+//        val firstPartStyled = SpannableString(firstPart).apply {
+//            setSpan(CustomTypefaceSpan(firstTypeFace), 0, firstPart.length, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
+//        }
+//
+//        val secondPartStyled = SpannableString(secondPart).apply {
+//            setSpan(CustomTypefaceSpan(secondTypeFace), 0, secondPart.length, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
+//            setSpan(ForegroundColorSpan(ContextCompat.getColor(requireContext(), R.color.orange)), 0, secondPart.length, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
+//            setSpan(RelativeSizeSpan(textSizeRatioPart2ToPart1), 0, secondPart.length, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
+//        }
+//
+//        val result = SpannableStringBuilder().apply {
+//            append(firstPartStyled)
+//            append("\n")
+//            append(secondPartStyled)
+//        }
+//
+//        return result
+//    }
 
     private fun setupToggleSubscriptionOptions() {
         val cards = listOf(binding.clLifetime, binding.clOneWeek, binding.clMonthly)

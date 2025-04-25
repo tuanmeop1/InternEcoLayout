@@ -12,4 +12,9 @@
     <color name="red_10">#1AC81912</color>
     <color name="gray">#9E9E9E</color>
     <color name="off_price_color">#F34732</color>
+    <color name="best_deal">#3FC600</color>
+    <color name="iap_red_start">#E5241C</color>
+    <color name="iap_red_end">#FF6544</color>
+
+    <color name="orange_feature">#EF9236</color>
 </resources>

@@ -70,23 +70,71 @@
         $29 first year, then $40/year. Auto renew. Cancel anytime
     </string>
 
+    <!-- Subscription Screen -->
+    <string name="unlimited_access">Unlimited Access</string>
+    <string name="to_vivishow">To ViViShow\u0020</string>
+    <string name="vivishow">ViViShow</string>
+    <string name="pro">PRO</string>
+    <string name="close">Close</string>
+
+    <!-- Feature Descriptions -->
+    <string name="feature_effects">Access all effects, frames</string>
+    <string name="feature_watermark">Remove watermark</string>
+    <string name="feature_ad_free">No Advertisement</string>
+    <string name="feature_hd">High quality export</string>
+    <string name="feature_unlock">Unlock 120 photo limit</string>
+
+
+    <string name="premium">Premium</string>
+    <string name="feature">Feature</string>
+
     <string name="transitions">Transitions</string>
     <string name="effects">Effects</string>
     <string name="frames">Frames</string>
     <string name="to_symbol">\u0020⇒\u0020</string>
     <string name="price_format">$%.2f/year</string>
 
-    <string name="subscription_terms_prefix">By continuing you agree to our\u0020</string>
+    <string name="subscription_terms_intro">By continuing you agree to our %1$s and %2$s:</string>
     <string name="subscription_terms">Terms</string>
     <string name="subscription_privacy">Privacy policies</string>
-    <string name="subscription_items">
-    &#160;&#160;&#8226; Subscription gives you access to Vivishow\'s premium features, all ads will be removed.\n \n \n \n \n \n \n \n \n \n \n \n
-    &#160;&#160;&#8226; Subscription plans are automatically renewed and can be canceled anytime in Subscriptions on Google Play.\n
-    &#160;&#160;&#8226; You won’t be charged if subscription is canceled before trial period ends.\n
-    &#160;&#160;&#8226; Subscription is not required to use Vivishow.
-    </string>
-    <string name="subscription_item1">&#8226; Subscription gives you access to Vivishow\'s premium features, all ads will be removed.</string>
-    <string name="subscription_item2">&#8226; Subscription plans are automatically renewed and can be canceled anytime in Subscriptions on Google Play.</string>
-    <string name="subscription_item3">&#8226; You won’t be charged if subscription is canceled before trial period ends.</string>
-    <string name="subscription_item4">&#8226; Subscription is not required to use Vivishow.</string>
+
+    <string-array name="subscription_items">
+        <item>Subscription gives you access to Vivishow\'s premium features, all ads will be removed.</item>
+        <item>Subscription plans are automatically renewed and can be canceled anytime in Subscriptions on Google Play.</item>
+        <item>You won’t be charged if subscription is canceled before trial period ends.</item>
+        <item>Subscription is not required to use Vivishow.</item>
+    </string-array>
+
+
+    <!-- Subscription header -->
+    <string name="unlock_pro_features">Unlock all pro features. No ads.</string>
+
+    <!-- Subscription options -->
+    <string name="free_trial">3-day free trial</string>
+    <string name="free_trial_description">Auto-renew. Cancel anytime</string>
+    <string name="free_trial_price">23,000d</string>
+    <string name="free_trial_price_dollar">$2.99</string>
+    <string name="free_trial_price_period">per week after trial</string>
+
+    <string name="monthly_description">Auto-renew. Cancel anytime</string>
+    <string name="monthly_price">60,000d</string>
+    <string name="monthly_price_dollar">$8.99</string>
+    <string name="monthly_price_period">per month</string>
+
+    <string name="lifetime_description">One-time payment</string>
+    <string name="lifetime_price">600,000d</string>
+    <string name="lifetime_price_dollar">$20.99</string>
+    <string name="lifetime_price_period">forever</string>
+
+    <!-- Buttons -->
+    <string name="start_free_trial">Start Free Trial</string>
+    <string name="use_limited_version">or Use limited version</string>
+
+    <!-- Photo quality labels -->
+    <string name="high_quality_export">High Quality Export</string>
+    <string name="no_watermark">No Watermark</string>
+    <string name="trendy">Trendy</string>
+
+    <!-- Promotional tags -->
+    <string name="best_deal">\u0020BEST DEAL</string>
 </resources>

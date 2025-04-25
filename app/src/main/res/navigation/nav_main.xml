@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <navigation xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/navMain"
     app:startDestination="@id/paywallFragment">
 
@@ -31,5 +32,30 @@
     <fragment
         android:id="@+id/paywallFragment"
         android:name="com.example.internecolayout.ui.component.paywall.fragment.PaywallFragment"
-        android:label="PaywallFragment" />
+        android:label="PaywallFragment" >
+        <action
+            android:id="@+id/action_paywallFragment_to_paywallPremiumFragment"
+            app:destination="@id/paywallPremiumFragment" />
+        <action
+            android:id="@+id/action_paywallFragment_to_paywallFeatureFragment"
+            app:destination="@id/paywallFeatureFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/paywallFeatureFragment"
+        android:name="com.example.internecolayout.ui.component.paywall.fragment.PaywallFeatureFragment"
+        android:label="fragment_paywall_feature"
+        tools:layout="@layout/fragment_paywall_feature" >
+        <action
+            android:id="@+id/action_paywallFeatureFragment_to_paywallFragment"
+            app:destination="@id/paywallFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/paywallPremiumFragment"
+        android:name="com.example.internecolayout.ui.component.paywall.fragment.PaywallPremiumFragment"
+        android:label="fragment_paywall_premium"
+        tools:layout="@layout/fragment_paywall_premium" >
+        <action
+            android:id="@+id/action_paywallPremiumFragment_to_paywallFragment"
+            app:destination="@id/paywallFragment" />
+    </fragment>
 </navigation>

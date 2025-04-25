@@ -49,6 +49,7 @@ dependencies {
     implementation("androidx.navigation:navigation-ui:$nav_version")
     implementation("com.github.prolificinteractive:material-calendarview:2.0.1")
     implementation("com.intuit.sdp:sdp-android:1.1.1")
+    implementation ("com.airbnb.android:lottie:6.6.6")
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.appcompat)
     implementation(libs.material)
