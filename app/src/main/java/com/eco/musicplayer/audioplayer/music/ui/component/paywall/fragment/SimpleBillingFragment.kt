@@ -97,7 +97,7 @@ class SimpleBillingFragment : Fragment() {
                         showLoading(false)
                         val subscriptionInfo = getSubscriptionInfo(state)
                         //binding.tvStatus.text = getString(R.string.subscribed_message, subscriptionInfo)
-                        hideProductButtons()
+                        //hideProductButtons()
                     }
                     is SubscriptionUiState.Error -> {
                         showLoading(false)
