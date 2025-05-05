@@ -137,4 +137,33 @@
 
     <!-- Promotional tags -->
     <string name="best_deal">\u0020BEST DEAL</string>
+
+    <!-- Billing Fragment Strings -->
+    <string name="checking_purchases">Checking your purchases…</string>
+    <string name="loading_products">Loading available products…</string>
+    <string name="select_product">Select a plan to purchase:</string>
+    <string name="subscribed_message">You are subscribed to: %1$s\nThank you for your purchase!</string>
+    <string name="error_message">Error: %1$s</string>
+
+    <string name="weekly_plan">Weekly Plan</string>
+    <string name="monthly_plan">Monthly Plan</string>
+    <string name="yearly_plan">Yearly Plan</string>
+    <string name="lifetime_plan">Lifetime Plan</string>
+    <string name="premium_plan">Premium Plan</string>
+
+    <string name="weekly_plan_button">1 Week: %1$s</string>
+    <string name="monthly_plan_button">1 Month: %1$s</string>
+    <string name="yearly_plan_button">1 Year: %1$s</string>
+    <string name="lifetime_plan_button">Lifetime: %1$s</string>
+
+    <string name="unknown_price">Unknown</string>
+    <string name="select_plan_prompt">Please select a plan</string>
+    <string name="no_products_found">No products found. Please check your network connection and Google Play account.</string>
+
+    <string name="weekly">Weekly</string>
+    <string name="yearly">Yearly</string>
+    <string name="premium_title">Music Player Premium</string>
+    <string name="premium_benefits_title">Premium Benefits:</string>
+    <string name="restore_purchases">Restore Purchases</string>
+    <string name="premium_benefits_list">• Ad-free music playback\n• Download music for offline listening\n• High-quality audio\n• Background playback\n• Unlimited playlists</string>
 </resources>
