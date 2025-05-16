@@ -21,6 +21,7 @@
     <string name="navigation_drawer_open">Open</string>
     <string name="navigation_drawer_close">Close</string>
     <string name="app_title_html"><![CDATA[<font color="#FF1493">Photo</font> on Text]]></string>
+    <string name="unknown">Unknown</string>
 
     <string name="remove_ads_for_the">Remove Ads for the</string>
     <string name="best_experience">Best Experience</string>
@@ -105,17 +106,24 @@
         <item>Subscription is not required to use Vivishow.</item>
     </string-array>
 
+    <string name="day">per Day</string>
+    <string name="week">per Week</string>
+    <string name="month">per Month</string>
+    <string name="year">per Year</string>
 
     <!-- Subscription header -->
     <string name="unlock_pro_features">Unlock all pro features. No ads.</string>
 
     <!-- Subscription options -->
-    <string name="free_trial">3-day free trial</string>
+    <string name="free_trial">%s-days free trial</string>
     <string name="free_trial_description">Auto-renew. Cancel anytime</string>
     <string name="free_trial_price">23,000d</string>
     <string name="free_trial_price_dollar">$2.99</string>
-    <string name="free_trial_price_period">per week after trial</string>
-
+    <string name="free_trial_price_period">per %s</string>
+    <string name="subscription_free_trial">Free trial for %1$d days, then %2$s %3$s.</string>
+    <string name="subscription_intro_offer">%1$d introductory cycles at %2$s %3$s, then %4$s %5$s.</string>
+    <string name="subscription_base_plan">%1$s %2$s.</string>
+    
     <string name="monthly_description">Auto-renew. Cancel anytime</string>
     <string name="monthly_price">60,000d</string>
     <string name="monthly_price_dollar">$8.99</string>

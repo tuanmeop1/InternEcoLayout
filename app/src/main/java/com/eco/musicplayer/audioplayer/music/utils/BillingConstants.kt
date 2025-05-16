@@ -1,11 +1,10 @@
 package com.eco.musicplayer.audioplayer.music.utils
 
 object BillingConstants {
-    // Subscription products
-    const val PRODUCT_ID_WEEKLY = "week_1"
-    const val PRODUCT_ID_MONTHLY = "vip_month"
-    const val PRODUCT_ID_YEARLY = "vipyear"
+    const val SUB_1 = "test1"
+    const val SUB_2 = "test2"
+    const val INAPP = "test3"
 
-    // One-time purchase product
-    const val PRODUCT_ID_LIFETIME = "musicplayer_vip_lifetime"
+    val subscriptionProductIds = listOf(SUB_1, SUB_2)
+    val oneTimePurchaseProductIds = listOf(INAPP)
 }

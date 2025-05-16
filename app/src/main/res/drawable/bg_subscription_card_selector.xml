@@ -4,7 +4,6 @@
     <item android:state_pressed="true" android:state_selected="false"
         android:drawable="@drawable/bg_subscription_card_selected"/>
 
-
     <item android:state_selected="true"
         android:drawable="@drawable/bg_subscription_card_selected"/>
 

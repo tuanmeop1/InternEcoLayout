@@ -57,26 +57,26 @@ class PaywallPremiumFragment : Fragment() {
 
     private fun initObserver() {
         // Lắng nghe uiState từ ViewModel để cập nhật UI theo trạng thái hiện tại
-        viewLifecycleOwner.lifecycleScope.launch {
-            viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
-                viewModel.uiState.collect { state ->
-                    when (state) {
-                        is SubscriptionUiState.Loading -> {
-                            // TODO: Hiển thị loading indicator nếu cần
-                        }
-                        is SubscriptionUiState.Available -> {
-                            showSubscriptionOptions(state.products)
-                        }
-                        is SubscriptionUiState.Subscribed -> {
-                            showSubscribedState(state.purchases)
-                        }
-                        is SubscriptionUiState.Error -> {
-                            Toast.makeText(requireContext(), state.message, Toast.LENGTH_LONG).show()
-                        }
-                    }
-                }
-            }
-        }
+//        viewLifecycleOwner.lifecycleScope.launch {
+//            viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
+//                viewModel.uiState.collect { state ->
+//                    when (state) {
+//                        is SubscriptionUiState.Loading -> {
+//                            // TODO: Hiển thị loading indicator nếu cần
+//                        }
+//                        is SubscriptionUiState.Available -> {
+//                            showSubscriptionOptions(state.products)
+//                        }
+//                        is SubscriptionUiState.Subscribed -> {
+//                            showSubscribedState(state.purchases)
+//                        }
+//                        is SubscriptionUiState.Error -> {
+//                            Toast.makeText(requireContext(), state.message, Toast.LENGTH_LONG).show()
+//                        }
+//                    }
+//                }
+//            }
+//        }
     }
 
     private fun initData() {
@@ -90,16 +90,16 @@ class PaywallPremiumFragment : Fragment() {
             findNavController().navigateUp()
         }
 
-        // Nút xác nhận đăng ký
-        binding.llStartFreeTrial.setOnClickListener {
-            selectedProduct?.let {
-                viewModel.purchase(requireActivity(), it, selectedOfferToken)
-            } ?: Toast.makeText(requireContext(), "Please select a subscription first", Toast.LENGTH_SHORT).show()
-        }
+//        // Nút xác nhận đăng ký
+//        binding.llStartFreeTrial.setOnClickListener {
+//            selectedProduct?.let {
+//                viewModel.purchaseOrChange(requireActivity(), it, selectedOfferToken)
+//            } ?: Toast.makeText(requireContext(), "Please select a subscription first", Toast.LENGTH_SHORT).show()
+//        }
     }
 
     private fun showSubscriptionOptions(products: List<ProductDetails>) {
-        setupToggleSubscriptionOptions(products)
+        //setupToggleSubscriptionOptions(products)
         // Optionally auto-select the first option:
         //simulateSelectProductAtIndex(products, index = 0)
     }
@@ -160,28 +160,23 @@ class PaywallPremiumFragment : Fragment() {
 //        }
 //    }
 
-    private fun setupToggleSubscriptionOptions(products: List<ProductDetails>) {
-        val cards = listOf(binding.clFreeTrial, binding.clMonthly, binding.clLifetime)
-        val cardsInner = listOf(binding.mFreeTrial, binding.mMonthly, binding.mLifetime)
-        val productIds = listOf(
-
-            BillingConstants.PRODUCT_ID_MONTHLY,
-            BillingConstants.PRODUCT_ID_LIFETIME
-        )
-
-        cards.forEachIndexed { index, card ->
-            card.setOnClickListener {
-                // Cập nhật UI toggle
-                cards.forEach { it.isSelected = false }
-                cardsInner.forEach { it.ivCheckButton.isSelected = false }
-                card.isSelected = true
-                cardsInner[index].ivCheckButton.isSelected = true
-
-                // Lưu thông tin sản phẩm được chọn
-                val product = products.find { it.productId == productIds.getOrNull(index) }
-                selectedProduct = product
-                selectedOfferToken = product?.subscriptionOfferDetails?.firstOrNull()?.offerToken
-            }
-        }
-    }
+//    private fun setupToggleSubscriptionOptions(products: List<ProductDetails>) {
+//        val cards = listOf(binding.clFreeTrial, binding.clMonthly, binding.clLifetime)
+//        val cardsInner = listOf(binding.mFreeTrial, binding.mMonthly, binding.mLifetime)
+//
+//        cards.forEachIndexed { index, card ->
+//            card.setOnClickListener {
+//                // Cập nhật UI toggle
+//                cards.forEach { it.isSelected = false }
+//                cardsInner.forEach { it.ivCheckButton.isSelected = false }
+//                card.isSelected = true
+//                cardsInner[index].ivCheckButton.isSelected = true
+//
+//                // Lưu thông tin sản phẩm được chọn
+//                val product = products.find { it.productId == productIds.getOrNull(index) }
+//                selectedProduct = product
+//                selectedOfferToken = product?.subscriptionOfferDetails?.firstOrNull()?.offerToken
+//            }
+//        }
+//    }
 }

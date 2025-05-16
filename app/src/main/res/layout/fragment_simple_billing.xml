@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
 
     <ScrollView
         android:id="@+id/svSubscription"
@@ -159,6 +160,19 @@
                     layout="@layout/item_subscription_card" />
             </androidx.constraintlayout.widget.ConstraintLayout>
 
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/tvOfferDetails"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/_10sdp"
+                android:textAlignment="center"
+                android:textSize="@dimen/_10sdp"
+                android:fontFamily="@font/roboto_regular"
+                tools:text="OFFER DETAILS"
+                app:layout_constraintEnd_toEndOf="@+id/llStartFreeTrial"
+                app:layout_constraintStart_toStartOf="@+id/clLifetime"
+                app:layout_constraintTop_toBottomOf="@+id/clLifetime" />
+
             <androidx.appcompat.widget.LinearLayoutCompat
                 android:id="@+id/llStartFreeTrial"
                 android:layout_width="0dp"
@@ -169,7 +183,7 @@
                 android:paddingVertical="@dimen/_14sdp"
                 app:layout_constraintEnd_toEndOf="@+id/clLifetime"
                 app:layout_constraintStart_toStartOf="@+id/clLifetime"
-                app:layout_constraintTop_toBottomOf="@+id/clLifetime">
+                app:layout_constraintTop_toBottomOf="@+id/tvOfferDetails">
 
                 <androidx.appcompat.widget.AppCompatTextView
                     android:layout_width="wrap_content"
