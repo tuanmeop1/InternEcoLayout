@@ -48,11 +48,18 @@
                     android:layout_weight="1" />
 
                 <androidx.appcompat.widget.AppCompatImageView
+                    android:id="@+id/ivPremium"
+                    android:layout_width="@dimen/_28sdp"
+                    android:layout_height="@dimen/_28sdp"
+                    android:layout_marginEnd="@dimen/_12sdp"
+                    app:srcCompat="@drawable/ic_premium_disabled"/>
+
+                <androidx.appcompat.widget.AppCompatImageView
                     android:id="@+id/ivClose"
                     android:layout_width="@dimen/_18sdp"
                     android:layout_height="@dimen/_18sdp"
                     android:layout_gravity="center_vertical"
-                    android:src="@drawable/ic_dismiss" />
+                    app:srcCompat="@drawable/ic_dismiss" />
             </androidx.appcompat.widget.LinearLayoutCompat>
 
             <androidx.appcompat.widget.AppCompatImageView

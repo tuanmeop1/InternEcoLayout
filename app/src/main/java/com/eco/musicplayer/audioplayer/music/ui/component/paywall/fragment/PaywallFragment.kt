@@ -14,6 +14,12 @@ import com.eco.musicplayer.audioplayer.music.R
 import com.eco.musicplayer.audioplayer.music.databinding.FragmentPaywallBinding
 import com.eco.musicplayer.audioplayer.music.ui.component.bottom_sheet.BottomSheetDialogPaywall
 import com.eco.musicplayer.audioplayer.music.ui.component.bottom_sheet.BottomSheetPaywallEditing
+import com.eco.musicplayer.audioplayer.music.utils.PurchaseStorage
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
+import org.koin.android.ext.android.inject
 
 
 class PaywallFragment : Fragment() {
@@ -21,6 +27,7 @@ class PaywallFragment : Fragment() {
     private val binding get() = _binding!!
     private lateinit var bottomSheet: BottomSheetPaywallEditing
     private lateinit var paywallDialog: BottomSheetDialogPaywall
+    private val purchaseStorage: PurchaseStorage by inject()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -33,6 +40,7 @@ class PaywallFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         initializeData()
+        initializeViews()
         registerListeners()
     }
 
@@ -42,8 +50,6 @@ class PaywallFragment : Fragment() {
     }
 
     private fun initializeData() {
-        val firstPart = getString(R.string.remove_ads_for_the)
-        val secondPart = getString(R.string.best_experience)
         val originalPrice = "$32.99 "
         val price = "$27.99 "
         val offPriceValue = 40
@@ -83,6 +89,10 @@ class PaywallFragment : Fragment() {
 
     }
 
+    private fun initializeViews() {
+        checkPremiumStatus()
+    }
+
     private fun registerListeners() {
         setupToggleSubscriptionOptions()
         binding.apply {
@@ -92,7 +102,7 @@ class PaywallFragment : Fragment() {
             }
 
             llPremium.setOnClickListener {
-                findNavController().navigate(R.id.action_paywallFragment_to_paywallPremiumFragment)
+                findNavController().navigate(R.id.action_paywallFragment_to_simpleBillingFragment)
             }
 
             llFeature.setOnClickListener {
@@ -132,6 +142,15 @@ class PaywallFragment : Fragment() {
 //
 //        return result
 //    }
+
+    private fun checkPremiumStatus() {
+        val isPremium = purchaseStorage.isAnyProductAcknowledged()
+        if (isPremium) {
+            binding.ivPremium.setImageResource(R.drawable.ic_premium_enable)
+        } else {
+            binding.ivPremium.setImageResource(R.drawable.ic_premium_disabled)
+        }
+    }
 
     private fun setupToggleSubscriptionOptions() {
         val cards = listOf(binding.clLifetime, binding.clOneWeek, binding.clMonthly)

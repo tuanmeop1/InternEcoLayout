@@ -123,7 +123,7 @@
     <string name="subscription_free_trial">Free trial for %1$d days, then %2$s %3$s.</string>
     <string name="subscription_intro_offer">%1$d introductory cycles at %2$s %3$s, then %4$s %5$s.</string>
     <string name="subscription_base_plan">%1$s %2$s.</string>
-    
+
     <string name="monthly_description">Auto-renew. Cancel anytime</string>
     <string name="monthly_price">60,000d</string>
     <string name="monthly_price_dollar">$8.99</string>
@@ -135,9 +135,11 @@
     <string name="lifetime_price_period">forever</string>
 
     <!-- Buttons -->
-    <string name="start_free_trial">Start Free Trial</string>
+    <string name="free_trial_button">Start Free Trial</string>
     <string name="use_limited_version">or Use limited version</string>
-
+    <string name="upgrade_subscription">Upgrade Subscription</string>"
+    <string name="downgrade_subscription">Downgrade Subscription</string>
+    <string name="continue_buy">Continue</string>
     <!-- Photo quality labels -->
     <string name="high_quality_export">High Quality Export</string>
     <string name="no_watermark">No Watermark</string>
@@ -145,6 +147,7 @@
 
     <!-- Promotional tags -->
     <string name="best_deal">\u0020BEST DEAL</string>
+    <string name="active">Active</string>
 
     <!-- Billing Fragment Strings -->
     <string name="checking_purchases">Checking your purchases…</string>

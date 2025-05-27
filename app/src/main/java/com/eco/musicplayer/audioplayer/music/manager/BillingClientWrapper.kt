@@ -2,8 +2,10 @@ package com.eco.musicplayer.audioplayer.music.manager
 
 import android.app.Activity
 import android.content.Context
+import android.content.SharedPreferences
 import androidx.lifecycle.LiveData
 import com.android.billingclient.api.Purchase
+import com.eco.musicplayer.audioplayer.model.BaseProductInfo
 import com.eco.musicplayer.audioplayer.model.ProductInfo
 import kotlinx.coroutines.flow.StateFlow
 
@@ -58,7 +60,7 @@ interface BillingClientWrapper {
     /**
      * Get product details for display
      */
-    fun getProductInfo(productId: String): ProductInfo?
+    fun getProductInfo(productId: String): BaseProductInfo?
 
     /**
      * Get localized price for a product

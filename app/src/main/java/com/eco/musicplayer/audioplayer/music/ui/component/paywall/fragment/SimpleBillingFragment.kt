@@ -7,27 +7,30 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import android.widget.Toast
+import androidx.appcompat.widget.AppCompatTextView
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
+import androidx.navigation.fragment.findNavController
+import com.eco.musicplayer.audioplayer.model.BaseProductInfo
 import com.eco.musicplayer.audioplayer.model.ProductInfo
 import com.eco.musicplayer.audioplayer.music.R
 import com.eco.musicplayer.audioplayer.music.databinding.FragmentSimpleBillingBinding
 import com.eco.musicplayer.audioplayer.music.ui.component.paywall.state.SubscriptionUiState
 import com.eco.musicplayer.audioplayer.music.ui.component.paywall.viewmodel.SubscriptionViewModel
-import com.eco.musicplayer.audioplayer.music.ui.component.paywall.viewmodel.SubscriptionViewModelFactory
 import com.eco.musicplayer.audioplayer.music.utils.BillingConstants
 import com.eco.musicplayer.audioplayer.music.utils.BillingProductType
+import com.eco.musicplayer.audioplayer.music.utils.getSortedProductBindings
 import com.eco.musicplayer.audioplayer.music.utils.parsePeriodToDays
 import com.eco.musicplayer.audioplayer.music.utils.parsePeriodToReadableText
 import com.eco.musicplayer.audioplayer.music.utils.setPolicyText
 import com.eco.musicplayer.audioplayer.music.utils.underline
 import kotlinx.coroutines.launch
+import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class SimpleBillingFragment : Fragment() {
 
     private val TAG = "SimpleBillingFragment"
-    private lateinit var viewModel: SubscriptionViewModel
+    private val viewModel: SubscriptionViewModel by viewModel()
 
     private var _binding: FragmentSimpleBillingBinding? = null
 
@@ -46,11 +49,12 @@ class SimpleBillingFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        val factory = SubscriptionViewModelFactory(requireActivity().application)
-        viewModel = ViewModelProvider(this, factory)[SubscriptionViewModel::class.java]
+        //val factory = SubscriptionViewModelFactory(requireActivity().application)
+        //viewModel = ViewModelProvider(this, factory)[SubscriptionViewModel::class.java]
+        viewModel.start()
         hideProductButtons()
         initData()
-        setupListeners()
+        registerListeners()
         observeViewModel()
     }
 
@@ -65,9 +69,13 @@ class SimpleBillingFragment : Fragment() {
         binding.tvLimited.underline()
     }
 
-    private fun setupListeners() {
+    private fun registerListeners() {
         binding.llStartFreeTrial.setOnClickListener {
             purchase()
+        }
+
+        binding.ivClose.setOnClickListener {
+            findNavController().navigateUp()
         }
     }
 
@@ -82,7 +90,13 @@ class SimpleBillingFragment : Fragment() {
                     is SubscriptionUiState.Available -> {
                         showLoading(false)
                         Log.d(TAG, "Available products: ${state.products.size}")
-                        setupProductButtons(state.products)
+                        val purchasedIds = state.purchases.flatMap { purchase ->
+                            @Suppress("DEPRECATION")
+                            purchase.products.ifEmpty { purchase.skus }
+                        }
+                        setupProductButtons(state.products, purchasedIds.firstOrNull())
+                        updateSubscriptionUI(purchasedIds)
+                        Log.d(TAG, "Purchased products: ${state.purchases}")
                     }
 
                     is SubscriptionUiState.Subscribed -> {
@@ -91,7 +105,8 @@ class SimpleBillingFragment : Fragment() {
                             @Suppress("DEPRECATION")
                             purchase.products.ifEmpty { purchase.skus ?: emptyList() }
                         }
-                        highlightPurchasedProducts(purchasedIds)
+                        updateSubscriptionUI(purchasedIds)
+                        Log.d(TAG, "Purchased products: ${state.purchases}")
                     }
 
                     is SubscriptionUiState.Error -> {
@@ -103,9 +118,11 @@ class SimpleBillingFragment : Fragment() {
         }
     }
 
-    private fun setupProductButtons(productList: List<ProductInfo>) {
-        Log.d(TAG, "Setting up product buttons. Products count: ${productList.size}")
-
+    private fun setupProductButtons(
+        productList: List<BaseProductInfo>,
+        currentPurchasedProductId: String?
+    ) {
+        Log.d(TAG, "Im here setupProductButton")
         val productMap = mapOf(
             BillingConstants.SUB_1 to Pair(binding.clFreeTrial, binding.mFreeTrial),
             BillingConstants.SUB_2 to Pair(binding.clMonthly, binding.mMonthly),
@@ -134,7 +151,12 @@ class SimpleBillingFragment : Fragment() {
                     // Handle subscription
                     descriptionText = getString(R.string.free_trial_description)
                     priceText = productInfo.formattedPrice
-                    periodText = productInfo.billingPeriod?.let { parsePeriodToReadableText(it, requireContext()) }
+                    periodText = productInfo.billingPeriod?.let {
+                        parsePeriodToReadableText(
+                            it,
+                            requireContext()
+                        )
+                    }
                 }
 
                 // Get billing cycle type based on the billing period
@@ -154,7 +176,10 @@ class SimpleBillingFragment : Fragment() {
                 card.setOnClickListener {
                     selectedProductId = productId
                     selectedOfferToken = productInfo.offerToken
-
+                    binding.tvStartSubscription.text = getButtonLabel(
+                        currentPurchasedProductId = currentPurchasedProductId,
+                        currentSelectedProductInfo = productInfo
+                    )
                     allCards.forEach { it.isSelected = false }
                     allInnerCards.forEach { it.ivCheckButton.isSelected = false }
 
@@ -170,38 +195,68 @@ class SimpleBillingFragment : Fragment() {
                         binding.tvOfferDetails.visibility = View.GONE
                     }
                 }
-            }
-            else {
+            } else {
                 card.visibility = View.GONE
                 Log.d(TAG, "$productId not found")
             }
         }
     }
 
-    private fun getOfferInfo(product: ProductInfo): String? {
+    private fun getOfferInfo(product: BaseProductInfo): String? {
         return when {
             product.hasFreeTrial && product.freeTrialPeriod != null -> {
-                val trialDays = parsePeriodToDays(product.freeTrialPeriod)
-                getString(R.string.subscription_free_trial, trialDays, product.formattedPrice,
-                    parsePeriodToReadableText(product.billingPeriod ?: "", requireContext()))
+                val trialDays = parsePeriodToDays(product.freeTrialPeriod!!)
+                getString(
+                    R.string.subscription_free_trial, trialDays, product.formattedPrice,
+                    parsePeriodToReadableText(product.billingPeriod ?: "", requireContext())
+                )
             }
 
             product.hasIntroPrice && product.introPricePeriod != null && product.introFormattedPrice != null -> {
                 val introCycles = 1 // Default to 1 since we can't get the exact number easily
                 val introPriceFormatted = product.introFormattedPrice
                 val regularPriceFormatted = product.formattedPrice
-                val introPeriod = parsePeriodToReadableText(product.introPricePeriod, requireContext())
-                val regularPeriod = parsePeriodToReadableText(product.billingPeriod ?: "", requireContext())
-                getString(R.string.subscription_intro_offer, introCycles, introPriceFormatted, introPeriod, regularPriceFormatted, regularPeriod)
+                val introPeriod =
+                    parsePeriodToReadableText(product.introPricePeriod!!, requireContext())
+                val regularPeriod =
+                    parsePeriodToReadableText(product.billingPeriod ?: "", requireContext())
+                getString(
+                    R.string.subscription_intro_offer,
+                    introCycles,
+                    introPriceFormatted,
+                    introPeriod,
+                    regularPriceFormatted,
+                    regularPeriod
+                )
             }
 
-            product.isSubscription -> {
+            product.type == BillingProductType.SUBS -> {
                 val basePriceFormatted = product.formattedPrice
-                val period = parsePeriodToReadableText(product.billingPeriod ?: "", requireContext())
+                val period =
+                    parsePeriodToReadableText(product.billingPeriod ?: "", requireContext())
                 getString(R.string.subscription_base_plan, basePriceFormatted, period)
             }
 
             else -> null
+        }
+    }
+
+    private fun getButtonLabel(
+        currentPurchasedProductId: String?,
+        currentSelectedProductInfo: BaseProductInfo
+    ): String {
+        return when {
+            currentSelectedProductInfo.hasFreeTrial && currentSelectedProductInfo.freeTrialPeriod != null -> {
+                getString(R.string.free_trial_button)
+            }
+
+            else -> {
+                if (currentPurchasedProductId == null) {
+                    getString(R.string.continue_buy)
+                } else {
+                    getString(R.string.upgrade_subscription)
+                }
+            }
         }
     }
 
@@ -256,22 +311,37 @@ class SimpleBillingFragment : Fragment() {
         )
     }
 
-    private fun highlightPurchasedProducts(purchasedProductIds: List<String>) {
+    private fun updateSubscriptionUI(purchasedProductIds: List<String>) {
         val productMap = mapOf(
-            BillingConstants.SUB_1 to binding.clFreeTrial,
-            BillingConstants.SUB_2 to binding.clMonthly,
-            BillingConstants.INAPP to binding.clLifetime
+            BillingConstants.SUB_1 to Pair(binding.clFreeTrial, binding.tvBestDeal1),
+            BillingConstants.SUB_2 to Pair(binding.clMonthly, binding.tvBestDeal2),
+            BillingConstants.INAPP to Pair(binding.clLifetime, binding.tvBestDeal3)
         )
 
-        for ((productId, card) in productMap) {
-            if (purchasedProductIds.contains(productId)) {
-                card.isSelected = false
-                card.setBackgroundResource(R.drawable.bg_subscription_card_disable)
-                card.isClickable = false
-            } else {
-                card.setBackgroundResource(R.drawable.bg_subscription_card_selector)
-                card.isClickable = true
+        val sortedProductBinding = getSortedProductBindings(viewModel.products, productMap)
+        val currentPurchasedProductId = purchasedProductIds.firstOrNull() ?: return
+        Log.d("SortedProduct", sortedProductBinding.toString())
+        Log.d("CurrentPurchasedProductId", currentPurchasedProductId)
+        Log.d("PurchasedProduct", purchasedProductIds.toString())
+        val currentCard = productMap[currentPurchasedProductId]
+        Log.d("CurrentCard1", currentCard.toString())
+        val currentPurchasedProductInfo = viewModel.products[currentPurchasedProductId]
+        if (currentPurchasedProductInfo != null) {
+            Log.d("CurrentCard2", currentCard.toString())
+            if (currentPurchasedProductInfo.type == BillingProductType.SUBS) {
+                disableSubscriptionCard(sortedProductBinding.last().card)
             }
+            currentCard?.let {
+                Log.d("CurrentCard2", currentCard.toString())
+                highlightPurchasedSubscription(currentCard)
+            }
+        }
+
+        sortedProductBinding.forEach { productBinding ->
+            if (productBinding.productId == currentPurchasedProductId) {
+                return
+            }
+            disableSubscriptionCard(productBinding.card)
         }
     }
 
@@ -279,6 +349,22 @@ class SimpleBillingFragment : Fragment() {
         binding.clFreeTrial.visibility = View.GONE
         binding.clMonthly.visibility = View.GONE
         binding.clLifetime.visibility = View.GONE
+    }
+
+    private fun highlightPurchasedSubscription(subscriptionCard: Pair<View, AppCompatTextView>) {
+        val text = subscriptionCard.second
+        disableSubscriptionCard(subscriptionCard)
+        text.visibility = View.VISIBLE
+        text.text = getString(R.string.active)
+    }
+
+    private fun disableSubscriptionCard(subscriptionCard: Pair<View, AppCompatTextView>) {
+        val card = subscriptionCard.first
+        val text = subscriptionCard.second
+        card.isSelected = false
+        card.setBackgroundResource(R.drawable.bg_subscription_card_disable)
+        card.isClickable = false
+        text.visibility = View.GONE
     }
 
     private fun showLoading(isLoading: Boolean) {

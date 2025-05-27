@@ -1,11 +1,10 @@
 package com.eco.musicplayer.audioplayer.model
 
-import com.android.billingclient.api.BillingClient
-import com.android.billingclient.api.ProductDetails
+import com.android.billingclient.api.SkuDetails
 import com.eco.musicplayer.audioplayer.music.utils.BillingProductType
 
-data class ProductInfo(
-    private val productDetails: ProductDetails? = null,
+data class SkuInfo(
+    val skuDetail: SkuDetails? = null,
     override val productId: String = "",
     override val type: BillingProductType = BillingProductType.INAPP,
     override val title: String = "",

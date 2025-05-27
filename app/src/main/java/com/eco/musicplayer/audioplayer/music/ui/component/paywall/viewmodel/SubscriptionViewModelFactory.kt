@@ -8,11 +8,11 @@ class SubscriptionViewModelFactory(
     private val application: Application
 ) : ViewModelProvider.Factory {
 
-    @Suppress("UNCHECKED_CAST")
-    override fun <T : ViewModel> create(modelClass: Class<T>): T {
-        if (modelClass.isAssignableFrom(SubscriptionViewModel::class.java)) {
-            return SubscriptionViewModel(application) as T
-        }
-        throw IllegalArgumentException("Unknown ViewModel class")
-    }
+//    @Suppress("UNCHECKED_CAST")
+//    override fun <T : ViewModel> create(modelClass: Class<T>): T {
+//        if (modelClass.isAssignableFrom(SubscriptionViewModel::class.java)) {
+//            return SubscriptionViewModel(application) as T
+//        }
+//        throw IllegalArgumentException("Unknown ViewModel class")
+//    }
 }

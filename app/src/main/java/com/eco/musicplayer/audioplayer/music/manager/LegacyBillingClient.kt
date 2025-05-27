@@ -2,12 +2,14 @@ package com.eco.musicplayer.audioplayer.music.manager
 
 import android.app.Activity
 import android.content.Context
+import android.content.SharedPreferences
 import android.util.Log
 import com.android.billingclient.api.*
 import com.android.billingclient.api.BillingFlowParams.SubscriptionUpdateParams.ReplacementMode
 import com.eco.musicplayer.audioplayer.model.ProductInfo
 import com.eco.musicplayer.audioplayer.music.utils.BillingConstants
 import com.eco.musicplayer.audioplayer.music.utils.BillingProductType
+import com.eco.musicplayer.audioplayer.music.utils.PurchaseStorage
 import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -19,7 +21,8 @@ import kotlin.coroutines.resume
  */
 class LegacyBillingClient(
     private val context: Context,
-    private val coroutineScope: CoroutineScope
+    private val coroutineScope: CoroutineScope,
+    private val sharedPref: PurchaseStorage
 ) : BillingClientWrapper, PurchasesUpdatedListener {
 
     private val TAG = "LegacyBillingClient"
@@ -225,6 +228,8 @@ class LegacyBillingClient(
         }
 
         _purchases.value = purchases
+
+        sharedPref.updateAcknowledgedProducts(purchases)
     }
 
     override fun onPurchasesUpdated(billingResult: BillingResult, purchases: List<Purchase>?) {
@@ -242,25 +247,30 @@ class LegacyBillingClient(
     }
 
     private suspend fun handlePurchase(purchase: Purchase) {
-        // Grant entitlement
-        grantEntitlement(purchase)
+        if (purchase.purchaseState == Purchase.PurchaseState.PURCHASED) {
+            if (!purchase.isAcknowledged) {
+                val acknowledgeParams = AcknowledgePurchaseParams.newBuilder()
+                    .setPurchaseToken(purchase.purchaseToken)
+                    .build()
 
-        // Acknowledge purchase if needed
-        if (purchase.purchaseState == Purchase.PurchaseState.PURCHASED && !purchase.isAcknowledged) {
-            val acknowledgePurchaseParams = AcknowledgePurchaseParams.newBuilder()
-                .setPurchaseToken(purchase.purchaseToken)
-                .build()
-
-            val result = suspendCancellableCoroutine { continuation ->
-                billingClient.acknowledgePurchase(acknowledgePurchaseParams) { billingResult ->
-                    continuation.resume(billingResult)
+                val result = suspendCancellableCoroutine { continuation ->
+                    billingClient.acknowledgePurchase(acknowledgeParams) { billingResult ->
+                        continuation.resume(billingResult)
+                    }
                 }
-            }
 
-            if (result.responseCode != BillingClient.BillingResponseCode.OK) {
-                // Handle acknowledgement error
-                Log.e(TAG, "Failed to acknowledge purchase: ${result.responseCode}")
+                if (result.responseCode == BillingClient.BillingResponseCode.OK) {
+                    grantEntitlement(purchase)
+
+                } else {
+                    Log.e(TAG, "Failed to acknowledge purchase: ${result.responseCode}")
+                }
+            } else {
+                grantEntitlement(purchase)
+
             }
+        } else {
+            Log.w(TAG, "Purchase not in PURCHASED state: ${purchase.purchaseState}")
         }
     }
 
@@ -270,7 +280,7 @@ class LegacyBillingClient(
             @Suppress("DEPRECATION")
             val skusList = purchase.skus // For older versions we use skus instead of products
             val productId = skusList.firstOrNull() ?: return
-
+            sharedPref.saveAcknowledgedProductId(productId)
             Log.d(TAG, "Granting entitlement for product: $productId")
 
             // Handle subscription products
@@ -369,9 +379,9 @@ class LegacyBillingClient(
             billingPeriod = if (type == BillingProductType.SUBS) skuDetails.subscriptionPeriod else null,
             hasFreeTrial = skuDetails.freeTrialPeriod.isNotEmpty(),
             hasIntroPrice = skuDetails.introductoryPrice.isNotEmpty(),
-            freeTrialPeriod = if (skuDetails.freeTrialPeriod.isNotEmpty()) skuDetails.freeTrialPeriod else null,
-            introPricePeriod = if (skuDetails.introductoryPricePeriod.isNotEmpty()) skuDetails.introductoryPricePeriod else null,
-            introFormattedPrice = if (skuDetails.introductoryPrice.isNotEmpty()) skuDetails.introductoryPrice else null
+            freeTrialPeriod = skuDetails.freeTrialPeriod.ifEmpty { null },
+            introPricePeriod = skuDetails.introductoryPricePeriod.ifEmpty { null },
+            introFormattedPrice = skuDetails.introductoryPrice.ifEmpty { null }
         )
     }
 

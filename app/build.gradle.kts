@@ -48,6 +48,7 @@ dependencies {
 
     val lifecycle_version = "2.8.7"
     val arch_version = "2.2.0"
+    val koin_android_version = "3.5.0"
 
     // ViewModel
     implementation("androidx.lifecycle:lifecycle-viewmodel-ktx:$lifecycle_version")
@@ -57,8 +58,22 @@ dependencies {
     implementation("com.android.billingclient:billing-ktx:$billing_version")
     // Views/Fragments integration
     implementation("androidx.navigation:navigation-fragment:$nav_version")
+    //Koin
+    // Java Compatibility
+    implementation("io.insert-koin:koin-android-compat:$koin_android_version")
+    // Jetpack WorkManager
+    implementation("io.insert-koin:koin-androidx-workmanager:$koin_android_version")
+    // Navigation Graph
+    implementation("io.insert-koin:koin-androidx-navigation:$koin_android_version")
+    implementation("io.insert-koin:koin-android:$koin_android_version")
     implementation("androidx.navigation:navigation-ui:$nav_version")
     implementation("com.github.prolificinteractive:material-calendarview:2.0.1")
+
+    // Admob
+    implementation("com.google.android.gms:play-services-ads:24.3.0")
+
+    implementation("com.google.code.gson:gson:2.13.1")
+
     implementation("com.intuit.sdp:sdp-android:1.1.1")
     implementation ("com.airbnb.android:lottie:6.6.6")
 

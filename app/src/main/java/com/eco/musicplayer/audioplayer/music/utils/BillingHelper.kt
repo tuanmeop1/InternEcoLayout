@@ -1,8 +1,28 @@
 package com.eco.musicplayer.audioplayer.music.utils
 
 import android.content.Context
+import android.view.ViewGroup
+import androidx.appcompat.widget.AppCompatTextView
 import com.android.billingclient.api.ProductDetails
+import com.eco.musicplayer.audioplayer.model.BaseProductInfo
+import com.eco.musicplayer.audioplayer.model.ProductInfo
+import com.eco.musicplayer.audioplayer.model.ProductViewBinding
 import com.eco.musicplayer.audioplayer.music.R
+
+fun getSortedProductBindings(
+    products: Map<String, BaseProductInfo>,
+    productMap: Map<String, Pair<ViewGroup, AppCompatTextView>>
+): List<ProductViewBinding> {
+    return products.values
+        .sortedBy { product ->
+            product.billingPeriod?.let { parsePeriodToDays(it) } ?: Int.MAX_VALUE
+        }
+        .mapNotNull { product ->
+            productMap[product.productId]?.let { pair ->
+                ProductViewBinding(product.productId, pair)
+            }
+        }
+}
 
 fun isFreeTrial(phases: List<ProductDetails.PricingPhase>): Boolean {
     return phases.isNotEmpty() && phases.first().priceAmountMicros == 0L
@@ -10,31 +30,6 @@ fun isFreeTrial(phases: List<ProductDetails.PricingPhase>): Boolean {
 
 fun isIntroPricing(phases: List<ProductDetails.PricingPhase>): Boolean {
     return phases.size >= 2 && phases[0].priceAmountMicros > 0 && phases[0].billingCycleCount > 0
-}
-
-fun isBasePlan(phases: List<ProductDetails.PricingPhase>): Boolean {
-    return phases.size == 1 && phases[0].recurrenceMode == ProductDetails.RecurrenceMode.INFINITE_RECURRING
-}
-
-fun getBasePhase(productDetails: ProductDetails): ProductDetails.PricingPhase? {
-    return productDetails.subscriptionOfferDetails
-        ?.flatMap { it.pricingPhases.pricingPhaseList }
-        ?.firstOrNull { phase ->
-            phase.priceAmountMicros > 0 && phase.billingCycleCount == 0
-        }
-}
-
-fun getBillingCycleType(billingPeriod: String?, context: Context): String {
-    return if (billingPeriod != null) {
-        when {
-            billingPeriod.contains("W") -> context.getString(R.string.weekly)
-            billingPeriod.contains("M") -> context.getString(R.string.monthly)
-            billingPeriod.contains("Y") -> context.getString(R.string.yearly)
-            else -> "unknown"
-        }
-    } else {
-        context.getString(R.string.lifetime)
-    }
 }
 
 fun parsePeriodToDays(period: String): Int {

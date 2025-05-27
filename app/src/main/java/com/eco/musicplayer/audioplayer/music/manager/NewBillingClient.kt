@@ -2,12 +2,15 @@ package com.eco.musicplayer.audioplayer.music.manager
 
 import android.app.Activity
 import android.content.Context
+import android.content.SharedPreferences
 import android.util.Log
 import com.android.billingclient.api.*
 import com.android.billingclient.api.BillingFlowParams.SubscriptionUpdateParams.ReplacementMode
+import com.eco.musicplayer.audioplayer.model.BaseProductInfo
 import com.eco.musicplayer.audioplayer.model.ProductInfo
 import com.eco.musicplayer.audioplayer.music.utils.BillingConstants
 import com.eco.musicplayer.audioplayer.music.utils.BillingProductType
+import com.eco.musicplayer.audioplayer.music.utils.PurchaseStorage
 import com.eco.musicplayer.audioplayer.music.utils.isFreeTrial
 import com.eco.musicplayer.audioplayer.music.utils.isIntroPricing
 import kotlinx.coroutines.*
@@ -18,7 +21,9 @@ import kotlin.coroutines.resume
 
 class NewBillingClient(
     private val context: Context,
-    private val coroutineScope: CoroutineScope
+    private val coroutineScope: CoroutineScope,
+    private val sharedPref: PurchaseStorage
+
 ) : BillingClientWrapper, PurchasesUpdatedListener {
 
     private val TAG = "NewBillingClient"
@@ -241,6 +246,8 @@ class NewBillingClient(
         // Combine the results
         val allPurchases = subsResult.purchasesList + inAppResult.purchasesList
         _purchases.value = allPurchases
+
+        sharedPref.updateAcknowledgedProducts(allPurchases)
     }
 
     override fun onPurchasesUpdated(billingResult: BillingResult, purchases: List<Purchase>?) {
@@ -255,25 +262,30 @@ class NewBillingClient(
     }
 
     private suspend fun handlePurchase(purchase: Purchase) {
-        // Grant entitlement
-        grantEntitlement(purchase)
+        if (purchase.purchaseState == Purchase.PurchaseState.PURCHASED) {
+            if (!purchase.isAcknowledged) {
+                val acknowledgeParams = AcknowledgePurchaseParams.newBuilder()
+                    .setPurchaseToken(purchase.purchaseToken)
+                    .build()
 
-        // Acknowledge purchase if needed
-        if (purchase.purchaseState == Purchase.PurchaseState.PURCHASED && !purchase.isAcknowledged) {
-            val acknowledgePurchaseParams = AcknowledgePurchaseParams.newBuilder()
-                .setPurchaseToken(purchase.purchaseToken)
-                .build()
-
-            val result = suspendCancellableCoroutine { continuation ->
-                billingClient.acknowledgePurchase(acknowledgePurchaseParams) { billingResult ->
-                    continuation.resume(billingResult)
+                val result = suspendCancellableCoroutine { continuation ->
+                    billingClient.acknowledgePurchase(acknowledgeParams) { billingResult ->
+                        continuation.resume(billingResult)
+                    }
                 }
-            }
 
-            if (result.responseCode != BillingClient.BillingResponseCode.OK) {
-                // Handle acknowledgement error
-                Log.e(TAG, "Failed to acknowledge purchase: ${result.responseCode}")
+                if (result.responseCode == BillingClient.BillingResponseCode.OK) {
+                    grantEntitlement(purchase)
+
+                } else {
+                    Log.e(TAG, "Failed to acknowledge purchase: ${result.responseCode}")
+                }
+            } else {
+                grantEntitlement(purchase)
+
             }
+        } else {
+            Log.w(TAG, "Purchase not in PURCHASED state: ${purchase.purchaseState}")
         }
     }
 
@@ -281,6 +293,7 @@ class NewBillingClient(
         // This implementation depends on your app's subscription logic
         if (purchase.purchaseState == Purchase.PurchaseState.PURCHASED) {
             val productId = purchase.products[0]
+            sharedPref.saveAcknowledgedProductId(productId)
             Log.d(TAG, "Granting entitlement for product: $productId")
 
             // Handle subscription products
@@ -374,7 +387,7 @@ class NewBillingClient(
         return result.responseCode == BillingClient.BillingResponseCode.OK
     }
 
-    override fun getProductInfo(productId: String): ProductInfo? {
+    override fun getProductInfo(productId: String): BaseProductInfo? {
         val productDetails = productDetailsMap[productId] ?: return null
 
         val type = if (productDetails.productType == BillingClient.ProductType.SUBS) {
@@ -437,6 +450,7 @@ class NewBillingClient(
         }
 
         return ProductInfo(
+            productDetails = productDetails,
             productId = productId,
             type = type,
             title = productDetails.title,

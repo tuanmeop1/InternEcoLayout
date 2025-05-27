@@ -93,7 +93,7 @@
             </androidx.constraintlayout.widget.ConstraintLayout>
 
             <androidx.appcompat.widget.AppCompatTextView
-                android:id="@+id/tvBestDeal"
+                android:id="@+id/tvBestDeal1"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="@dimen/_10sdp"
@@ -117,7 +117,7 @@
                 android:id="@+id/clMonthly"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/_8sdp"
+                android:layout_marginTop="@dimen/_12sdp"
                 android:clickable="true"
                 android:focusable="true"
                 android:background="@drawable/bg_subscription_card_selector"
@@ -132,6 +132,28 @@
                     layout="@layout/item_subscription_card" />
             </androidx.constraintlayout.widget.ConstraintLayout>
 
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/tvBestDeal2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="@dimen/_10sdp"
+                android:visibility="gone"
+                app:drawableStartCompat="@drawable/ic_flash"
+                android:background="@drawable/bg_best_deal"
+                android:fontFamily="@font/roboto_bold"
+                android:maxLines="1"
+                android:paddingHorizontal="@dimen/_6sdp"
+                android:paddingVertical="@dimen/_3sdp"
+                android:text="@string/best_deal"
+                android:textColor="@color/white"
+                android:textSize="@dimen/_8sdp"
+                app:autoSizeMaxTextSize="@dimen/_8sdp"
+                app:autoSizeMinTextSize="@dimen/_5sdp"
+                app:autoSizeTextType="uniform"
+                app:layout_constraintBottom_toTopOf="@id/clMonthly"
+                app:layout_constraintEnd_toEndOf="@id/clMonthly"
+                app:layout_constraintTop_toTopOf="@id/clMonthly" />
+
             <ProgressBar
                 android:id="@+id/progressBar"
                 android:layout_width="@dimen/_28sdp"
@@ -145,7 +167,7 @@
                 android:id="@+id/clLifetime"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="8dp"
+                android:layout_marginTop="@dimen/_12sdp"
                 android:clickable="true"
                 android:focusable="true"
                 android:background="@drawable/bg_subscription_card_selector"
@@ -159,6 +181,28 @@
                     android:id="@+id/mLifetime"
                     layout="@layout/item_subscription_card" />
             </androidx.constraintlayout.widget.ConstraintLayout>
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/tvBestDeal3"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="@dimen/_10sdp"
+                android:visibility="gone"
+                app:drawableStartCompat="@drawable/ic_flash"
+                android:background="@drawable/bg_best_deal"
+                android:fontFamily="@font/roboto_bold"
+                android:maxLines="1"
+                android:paddingHorizontal="@dimen/_6sdp"
+                android:paddingVertical="@dimen/_3sdp"
+                android:text="@string/best_deal"
+                android:textColor="@color/white"
+                android:textSize="@dimen/_8sdp"
+                app:autoSizeMaxTextSize="@dimen/_8sdp"
+                app:autoSizeMinTextSize="@dimen/_5sdp"
+                app:autoSizeTextType="uniform"
+                app:layout_constraintBottom_toTopOf="@id/clLifetime"
+                app:layout_constraintEnd_toEndOf="@id/clLifetime"
+                app:layout_constraintTop_toTopOf="@id/clLifetime" />
 
             <androidx.appcompat.widget.AppCompatTextView
                 android:id="@+id/tvOfferDetails"
@@ -186,10 +230,11 @@
                 app:layout_constraintTop_toBottomOf="@+id/tvOfferDetails">
 
                 <androidx.appcompat.widget.AppCompatTextView
+                    android:id="@+id/tvStartSubscription"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:fontFamily="@font/roboto_regular"
-                    android:text="@string/start_free_trial"
+                    android:text="@string/free_trial_button"
                     android:textColor="@color/white"
                     android:textSize="@dimen/_16sdp"
                     android:textStyle="bold" />

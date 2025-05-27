@@ -4,13 +4,13 @@ import android.app.Activity
 import android.app.Application
 import android.util.Log
 import androidx.lifecycle.AndroidViewModel
+import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.android.billingclient.api.BillingFlowParams
 import com.android.billingclient.api.Purchase
-import com.eco.musicplayer.audioplayer.model.ProductInfo
-import com.eco.musicplayer.audioplayer.music.manager.BillingClientFactory
-import com.eco.musicplayer.audioplayer.music.manager.BillingClientWrapper
+import com.eco.musicplayer.audioplayer.model.BaseProductInfo
 import com.eco.musicplayer.audioplayer.music.manager.BillingConnectionState
+import com.eco.musicplayer.audioplayer.music.manager.BillingManager
 import com.eco.musicplayer.audioplayer.music.ui.component.paywall.state.SubscriptionUiState
 import com.eco.musicplayer.audioplayer.music.utils.BillingConstants
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -18,34 +18,24 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 
-class SubscriptionViewModel(application: Application) : AndroidViewModel(application) {
+class SubscriptionViewModel(private val billingClient: BillingManager) : ViewModel() {
 
     private val TAG = "SubscriptionVM"
-
-    private lateinit var billingClient: BillingClientWrapper
 
     private val _uiState = MutableStateFlow<SubscriptionUiState>(SubscriptionUiState.Loading)
     val uiState: StateFlow<SubscriptionUiState> = _uiState.asStateFlow()
 
-    private val products = mutableMapOf<String, ProductInfo>()
+    val products = mutableMapOf<String, BaseProductInfo>()
 
     private var productsFetched = false
 
-    init {
+
+    fun start() {
         _uiState.value = SubscriptionUiState.Loading
 
         viewModelScope.launch {
             try {
-                billingClient = BillingClientFactory.create(
-                    application.applicationContext,
-                    viewModelScope
-                )
-
                 observeBillingUpdates()
-
-                if (billingClient.billingConnectionState.value is BillingConnectionState.Connected) {
-                    fetchProductInfo()
-                }
             } catch (e: Exception) {
                 Log.e(TAG, "Failed to initialize billing client: ${e.message}")
                 _uiState.value = SubscriptionUiState.Error("Failed to initialize billing client")
@@ -53,10 +43,10 @@ class SubscriptionViewModel(application: Application) : AndroidViewModel(applica
         }
     }
 
-
     private fun observeBillingUpdates() {
         // Observe billing connection state
         viewModelScope.launch {
+            billingClient.connect()
             billingClient.billingConnectionState.collect { state ->
                 Log.d(TAG, "Billing connection state changed: $state")
                 when (state) {
@@ -88,7 +78,6 @@ class SubscriptionViewModel(application: Application) : AndroidViewModel(applica
         viewModelScope.launch {
             billingClient.purchases.collect {
                 Log.d(TAG, "Purchases updated, count: ${it.size}")
-                // Only update UI state if products have been fetched
                 if (productsFetched) {
                     updateUiState()
                 }
@@ -148,19 +137,19 @@ class SubscriptionViewModel(application: Application) : AndroidViewModel(applica
         val hasActiveSubscription = purchases.any { purchase ->
             purchase.purchaseState == Purchase.PurchaseState.PURCHASED && purchase.isAcknowledged
         }
-
-        if (hasActiveSubscription) {
-            _uiState.value = SubscriptionUiState.Subscribed(purchases)
-        } else {
-            _uiState.value = SubscriptionUiState.Available(products.values.toList())
-        }
+        _uiState.value = SubscriptionUiState.Available(products.values.toList(), purchases)
+//        if (hasActiveSubscription) {
+//            _uiState.value = SubscriptionUiState.Subscribed(purchases)
+//        } else {
+//            _uiState.value = SubscriptionUiState.Available(products.values.toList())
+//        }
     }
 
     // Initiates the purchase flow
-    fun purchase(activity: Activity, productId: String, offerToken: String? = null) {
-        Log.d(TAG, "Launching purchase flow for product: $productId")
-        billingClient.launchBillingFlow(activity, productId, offerToken)
-    }
+//    fun purchase(activity: Activity, productId: String, offerToken: String? = null) {
+//        Log.d(TAG, "Launching purchase flow for product: $productId")
+//        billingClient.launchBillingFlow(activity, productId, offerToken)
+//    }
 
     fun purchaseOrChange(
         activity: Activity,
@@ -169,13 +158,11 @@ class SubscriptionViewModel(application: Application) : AndroidViewModel(applica
     ) {
         Log.d(TAG, "Processing purchase/change for product: $productId")
         // Find existing purchase that matches this product
-        val existingPurchase = billingClient.purchases.value.firstOrNull {
-            @Suppress("DEPRECATION")
-            it.products.contains(productId) || it.skus?.contains(productId) == true
-        }
+        val existingPurchase = billingClient.purchases.value.firstOrNull { it.isAcknowledged }
 
         when {
             existingPurchase == null -> {
+                Log.d(TAG, "null")
                 // New purchase
                 billingClient.purchaseOrChange(
                     activity = activity,
@@ -185,15 +172,16 @@ class SubscriptionViewModel(application: Application) : AndroidViewModel(applica
             }
 
             else -> {
+                Log.d(TAG, "not null")
                 // Changing subscription
-                val prorationMode =
+                val replaceMode =
                     BillingFlowParams.SubscriptionUpdateParams.ReplacementMode.CHARGE_PRORATED_PRICE
                 billingClient.purchaseOrChange(
                     activity = activity,
                     productId = productId,
                     offerToken = offerToken,
                     oldPurchaseToken = existingPurchase.purchaseToken,
-                    prorationMode = prorationMode
+                    replaceMode = replaceMode
                 )
             }
         }

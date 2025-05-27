@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/navMain"
-    app:startDestination="@id/simpleBillingFragment">
+    app:startDestination="@id/paywallFragment">
 
     <fragment
         android:id="@+id/menuFragment"
@@ -31,6 +31,9 @@
         <action
             android:id="@+id/action_paywallFragment_to_paywallFeatureFragment"
             app:destination="@id/paywallFeatureFragment" />
+        <action
+            android:id="@+id/action_paywallFragment_to_simpleBillingFragment"
+            app:destination="@id/simpleBillingFragment" />
     </fragment>
     <fragment
         android:id="@+id/paywallFeatureFragment"
@@ -53,5 +56,9 @@
     <fragment
         android:id="@+id/simpleBillingFragment"
         android:name="com.eco.musicplayer.audioplayer.music.ui.component.paywall.fragment.SimpleBillingFragment"
-        android:label="SimpleBillingFragment" />
+        android:label="SimpleBillingFragment" >
+        <action
+            android:id="@+id/action_simpleBillingFragment_to_paywallFragment"
+            app:destination="@id/paywallFragment" />
+    </fragment>
 </navigation>
