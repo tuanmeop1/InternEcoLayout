@@ -130,7 +130,7 @@ class BillingManager(
         })
     }
 
-    private fun retryConnection() {
+    fun retryConnection() {
         connect()
     }
 
