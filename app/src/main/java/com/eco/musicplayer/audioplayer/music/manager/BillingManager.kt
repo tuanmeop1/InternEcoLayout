@@ -136,12 +136,12 @@ class BillingManager(
             override fun onBillingSetupFinished(billingResult: BillingResult) {
                 if (billingResult.responseCode == BillingClient.BillingResponseCode.OK) {
 
-//                    val featureResponse =
-//                        billingClient.isFeatureSupported(BillingClient.FeatureType.PRODUCT_DETAILS)
-//                    isSupportProductDetails =
-//                        featureResponse.responseCode == BillingClient.BillingResponseCode.OK
-//
-//                    Log.d(TAG, "ProductDetails support: $isSupportProductDetails")
+                    val featureResponse =
+                        billingClient.isFeatureSupported(BillingClient.FeatureType.PRODUCT_DETAILS)
+                    isSupportProductDetails =
+                        featureResponse.responseCode == BillingClient.BillingResponseCode.OK
+
+                    Log.d(TAG, "ProductDetails support: $isSupportProductDetails")
 
                     coroutineScope.launch {
                         try {

@@ -10,7 +10,9 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.FragmentTransaction
 import androidx.navigation.fragment.findNavController
+import com.eco.musicplayer.audioplayer.ads.LoadFullScreenAdDialog
 import com.eco.musicplayer.audioplayer.ads.banner.BannerAdListener
 import com.eco.musicplayer.audioplayer.ads.banner.BannerAdManager
 import com.eco.musicplayer.audioplayer.ads.banner.BannerAdPreloader
@@ -98,6 +100,14 @@ class PaywallFragment : BaseFragmentBinding<FragmentPaywallBinding>(), AppOpenAd
         //createAnchorBannerAds()
         //createInlineBannerAds()
         createCollapsibleInlineBannerAds()
+//        val test = LoadFullScreenAdDialog()
+//        showDialog()
+        showDialog()
+    }
+
+    private fun showDialog() {
+        LoadFullScreenAdDialog(requireContext()).show()
+
     }
 
     override fun registerListeners() {

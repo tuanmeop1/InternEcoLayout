@@ -33,10 +33,6 @@ class MainActivity : AppCompatActivity() {
         appOpenAdApplication.appOpenAdManager.attachOverlayToActivity(this)
     }
 
-
-    fun showLoadingOverlay(show: Boolean) {
-    }
-
     fun getTopNavigationFragment(): Fragment? {
         val navHostFragment = supportFragmentManager.primaryNavigationFragment as? NavHostFragment
             ?: return null

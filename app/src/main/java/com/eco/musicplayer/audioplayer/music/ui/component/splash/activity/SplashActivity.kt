@@ -66,7 +66,7 @@ class SplashActivity : AppCompatActivity(), AndroidScopeComponent {
 
         countUpTimer.start()
         lifecycleScope.launch {
-            delay(3.seconds)
+            delay(billingTimeDuration)
             if (isBillingComplete) return@launch
             isPremium = false
         }
@@ -101,7 +101,7 @@ class SplashActivity : AppCompatActivity(), AndroidScopeComponent {
         appOpenAdManager.setAdUnitId(AdsConstants.APP_OPEN_AD_UNIT_ID)
         appOpenAdManager.setListener(object : AppOpenAdListener {
             override fun onAdLoaded() {
-                Log.d("SplashActivity", "123456 $this")
+                Log.d("SplashActivity", "Ad loaded $this")
             }
 
             override fun onAdShowed() {
