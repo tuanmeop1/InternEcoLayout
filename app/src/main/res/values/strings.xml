@@ -177,4 +177,14 @@
     <string name="premium_benefits_title">Premium Benefits:</string>
     <string name="restore_purchases">Restore Purchases</string>
     <string name="premium_benefits_list">• Ad-free music playback\n• Download music for offline listening\n• High-quality audio\n• Background playback\n• Unlimited playlists</string>
+
+    <!--  ADS  -->
+    <string name="ad_load_failed">Ad load failed</string>
+    <string name="show_interstitial_ad">Show Interstitial Ad</string>"
+    <string name="show_rewarded_ad">Show Rewarded Ad</string>"
+    <string name="show_rewarded_interstitial_ad">Show Rewarded Interstitial Ad</string>"
+    <string name="show_native_ad">Show Native Ad</string>
+    <string name="admob_lover">Admob Lover</string>
+    <string name="ad">Ads</string>
+
 </resources>

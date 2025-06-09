@@ -68,7 +68,7 @@ dependencies {
     implementation("io.insert-koin:koin-android:$koin_android_version")
     implementation("androidx.navigation:navigation-ui:$nav_version")
     implementation("com.github.prolificinteractive:material-calendarview:2.0.1")
-
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.7.3")
     // Admob
     implementation("com.google.android.gms:play-services-ads:24.3.0")
 
@@ -78,6 +78,7 @@ dependencies {
     implementation ("com.airbnb.android:lottie:6.6.6")
 
     implementation ("com.jakewharton.threetenabp:threetenabp:1.4.9")
+    implementation("androidx.lifecycle:lifecycle-process:2.8.3")
 
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.appcompat)

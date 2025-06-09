@@ -70,6 +70,10 @@ class SubscriptionViewModel(private val billingClient: BillingManager) : ViewMod
                         Log.d(TAG, "Billing client disconnected")
                         _uiState.value = SubscriptionUiState.Loading
                     }
+
+                    is BillingConnectionState.Purchased -> {
+                        Log.d(TAG, "Billing client query purchase completed")
+                    }
                 }
             }
         }

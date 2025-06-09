@@ -37,6 +37,10 @@ class PurchaseStorage(
     fun getAcknowledgedProductIds(): List<String> =
         ALL_PRODUCT_IDS.filter { purchasePrefs.getBoolean(it, false) }
 
+    fun fakePremium(): Boolean {
+        return true
+    }
+
     fun isProductAcknowledged(productId: String): Boolean =
         purchasePrefs.getBoolean(productId, false)
 

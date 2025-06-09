@@ -130,6 +130,44 @@ class BillingManager(
         })
     }
 
+    fun connectInSplash() {
+        _billingConnectionState.value = BillingConnectionState.Connecting
+        billingClient.startConnection(object : BillingClientStateListener {
+            override fun onBillingSetupFinished(billingResult: BillingResult) {
+                if (billingResult.responseCode == BillingClient.BillingResponseCode.OK) {
+
+//                    val featureResponse =
+//                        billingClient.isFeatureSupported(BillingClient.FeatureType.PRODUCT_DETAILS)
+//                    isSupportProductDetails =
+//                        featureResponse.responseCode == BillingClient.BillingResponseCode.OK
+//
+//                    Log.d(TAG, "ProductDetails support: $isSupportProductDetails")
+
+                    coroutineScope.launch {
+                        try {
+                            val purchasesDeferred = async { queryPurchases() }
+                            purchasesDeferred.await()
+                            val isPremium = purchaseStorage.isAnyProductAcknowledged()
+                            _billingConnectionState.value = BillingConnectionState.Purchased(isPremium)
+
+                        } catch (e: Exception) {
+                            Log.e(TAG, "Error during initial product query: ${e.message}")
+                            _billingConnectionState.value = BillingConnectionState.Connected
+                        }
+                    }
+                } else {
+                    _billingConnectionState.value =
+                        BillingConnectionState.Error(billingResult.responseCode)
+                }
+            }
+
+            override fun onBillingServiceDisconnected() {
+                _billingConnectionState.value = BillingConnectionState.Disconnected
+                retryConnection()
+            }
+        })
+    }
+
     fun retryConnection() {
         connect()
     }

@@ -1,62 +1,48 @@
 package com.eco.musicplayer.audioplayer.music.ui
 
 import android.os.Bundle
-import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.view.ViewCompat
-import androidx.core.view.WindowInsetsCompat
-import androidx.lifecycle.lifecycleScope
+import androidx.fragment.app.DialogFragment
+import androidx.fragment.app.Fragment
 import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
+import com.eco.musicplayer.audioplayer.App
+import com.eco.musicplayer.audioplayer.ads.app_open.AppOpenAdApplication
+import com.eco.musicplayer.audioplayer.ads.app_open.AppOpenAdManager
 import com.eco.musicplayer.audioplayer.music.R
 import com.eco.musicplayer.audioplayer.music.databinding.ActivityMainBinding
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.coroutineScope
-import kotlinx.coroutines.launch
+import org.koin.android.ext.android.inject
 
 class MainActivity : AppCompatActivity() {
 
 //    private var adapter = SimpleAdapter()
     private lateinit var binding: ActivityMainBinding
     private lateinit var navController: NavController
+    private val appOpenAdApplication: AppOpenAdApplication by inject()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
-        enableEdgeToEdge()
-        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main)) { v, insets ->
-            val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
-            v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
-            insets
-        }
 
 
         val navHostFragment = supportFragmentManager
             .findFragmentById(R.id.nav_host_fragment) as NavHostFragment
         navController = navHostFragment.navController
-//        binding.recyclerView.adapter = adapter
-//        binding.recyclerView.layoutManager = LinearLayoutManager(this)
-//        val listUser = listOf(User("0", "Natu Nguyen", 19),
-//            User("1", "Tuna Nguyen", 19),
-//            User("2", "Natu Le", 20),
-//            User("3", "Tanu Tran", 29),
-//            User("1", "Tuna Nguyen", 19),
-//            User("2", "Natu Le", 20),
-//            User("3", "Tanu Tran", 29),
-//            User("1", "Tuna Nguyen", 19),
-//            User("2", "Natu Le", 20),
-//            User("3", "Tanu Tran", 29),
-//            User("1", "Tuna Nguyen", 19),
-//            User("2", "Natu Le", 20),
-//            User("3", "Tanu Tran", 29),
-//            User("1", "Tuna Nguyen", 19),
-//            User("2", "Natu Le", 20),
-//            User("3", "Tanu Tran", 29),
-//            User("1", "Tuna Nguyen", 19),
-//            User("2", "Natu Le", 20),
-//            User("3", "Tanu Tran", 29))
-//        adapter.submitList(listUser)
+
+        appOpenAdApplication.appOpenAdManager.attachOverlayToActivity(this)
+    }
+
+
+    fun showLoadingOverlay(show: Boolean) {
+    }
+
+    fun getTopNavigationFragment(): Fragment? {
+        val navHostFragment = supportFragmentManager.primaryNavigationFragment as? NavHostFragment
+            ?: return null
+
+        return navHostFragment.childFragmentManager.fragments
+            .lastOrNull { it.isVisible && it !is DialogFragment }
     }
 
 }

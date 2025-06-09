@@ -15,6 +15,7 @@ import com.eco.musicplayer.audioplayer.model.BaseProductInfo
 import com.eco.musicplayer.audioplayer.model.ProductInfo
 import com.eco.musicplayer.audioplayer.music.R
 import com.eco.musicplayer.audioplayer.music.databinding.FragmentSimpleBillingBinding
+import com.eco.musicplayer.audioplayer.music.ui.base.BaseFragmentBinding
 import com.eco.musicplayer.audioplayer.music.ui.component.paywall.state.SubscriptionUiState
 import com.eco.musicplayer.audioplayer.music.ui.component.paywall.viewmodel.SubscriptionViewModel
 import com.eco.musicplayer.audioplayer.music.utils.BillingConstants
@@ -27,49 +28,31 @@ import com.eco.musicplayer.audioplayer.music.utils.underline
 import kotlinx.coroutines.launch
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
-class SimpleBillingFragment : Fragment() {
+class SimpleBillingFragment : BaseFragmentBinding<FragmentSimpleBillingBinding>() {
 
     private val TAG = "SimpleBillingFragment"
     private val viewModel: SubscriptionViewModel by viewModel()
 
-    private var _binding: FragmentSimpleBillingBinding? = null
-
-    private val binding get() = _binding!!
-
     private var selectedProductId: String? = null
     private var selectedOfferToken: String? = null
 
-    override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View {
-        _binding = FragmentSimpleBillingBinding.inflate(inflater, container, false)
-        return binding.root
-    }
 
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-        //val factory = SubscriptionViewModelFactory(requireActivity().application)
-        //viewModel = ViewModelProvider(this, factory)[SubscriptionViewModel::class.java]
+    override fun getContentViewId(): Int = R.layout.fragment_simple_billing
+
+    override fun initializeViews() {
         viewModel.start()
         hideProductButtons()
-        initData()
-        registerListeners()
         observeViewModel()
     }
 
-    override fun onDestroyView() {
-        super.onDestroyView()
-        _binding = null
-    }
 
-    private fun initData() {
+    override fun initializeData() {
         setUpSubscriptionTextView()
         setUpPrivacyTextView()
         binding.tvLimited.underline()
     }
 
-    private fun registerListeners() {
+    override fun registerListeners() {
         binding.llStartFreeTrial.setOnClickListener {
             purchase()
         }

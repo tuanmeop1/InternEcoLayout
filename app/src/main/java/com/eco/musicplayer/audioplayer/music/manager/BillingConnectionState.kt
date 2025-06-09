@@ -4,5 +4,6 @@ sealed class BillingConnectionState {
     data object Connecting : BillingConnectionState()
     data object Connected : BillingConnectionState()
     data object Disconnected : BillingConnectionState()
+    data class Purchased(val isPremium: Boolean) : BillingConnectionState()
     data class Error(val code: Int) : BillingConnectionState()
 }

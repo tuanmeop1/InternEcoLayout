@@ -34,6 +34,9 @@
         <action
             android:id="@+id/action_paywallFragment_to_simpleBillingFragment"
             app:destination="@id/simpleBillingFragment" />
+        <action
+            android:id="@+id/action_paywallFragment_to_admobLoverFragment"
+            app:destination="@id/admobLoverFragment" />
     </fragment>
     <fragment
         android:id="@+id/paywallFeatureFragment"
@@ -60,5 +63,36 @@
         <action
             android:id="@+id/action_simpleBillingFragment_to_paywallFragment"
             app:destination="@id/paywallFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/admobLoverFragment"
+        android:name="com.eco.musicplayer.audioplayer.music.ui.component.admob.fragment.AdmobLoverFragment"
+        android:label="AdmobLoverFragment" >
+        <action
+            android:id="@+id/action_admobLoverFragment_to_paywallFragment"
+            app:destination="@id/paywallFragment" />
+        <action
+            android:id="@+id/action_admobLoverFragment_to_admobDestinationFragment"
+            app:destination="@id/admobDestinationFragment" />
+
+    </fragment>
+    <fragment
+        android:id="@+id/admobDestinationFragment"
+        android:name="com.eco.musicplayer.audioplayer.music.ui.component.admob_destination.fragment.AdmobDestinationFragment"
+        android:label="AdmobDestinationFragment" >
+        <action
+            android:id="@+id/action_admobDestinationFragment_to_admobLoverFragment"
+            app:destination="@id/admobLoverFragment" />
+
+        <argument
+            android:name="isDisplayed"
+            app:argType="boolean"
+            android:defaultValue="false"/>
+
+        <argument
+            android:name="isRIDisplayed"
+            app:argType="boolean"
+            android:defaultValue="false"/>
+
     </fragment>
 </navigation>
