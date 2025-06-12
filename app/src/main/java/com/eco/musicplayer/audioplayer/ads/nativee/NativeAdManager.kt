@@ -9,6 +9,7 @@ import com.google.android.gms.ads.AdListener
 import com.google.android.gms.ads.AdLoader
 import com.google.android.gms.ads.AdRequest
 import com.google.android.gms.ads.LoadAdError
+import com.google.android.gms.ads.VideoOptions
 import com.google.android.gms.ads.nativead.NativeAd
 import com.google.android.gms.ads.nativead.NativeAdOptions
 import com.google.android.gms.ads.nativead.NativeAdView
@@ -36,7 +37,7 @@ class NativeAdManager(private val context: Context) {
         bind: (binding: ViewDataBinding, ad: NativeAd, adView: NativeAdView) -> Unit
     ) {
         val inflater = LayoutInflater.from(context)
-
+        val videoOptions = VideoOptions.Builder().setStartMuted(false).build()
         adLoader = AdLoader.Builder(context, adsUnitId)
             .forNativeAd { ad ->
                 currentNativeAd?.destroy()
@@ -59,9 +60,8 @@ class NativeAdManager(private val context: Context) {
                     nativeAdListener?.onAdFailedToLoad(error)
                 }
             })
-            .withNativeAdOptions(NativeAdOptions.Builder().build())
+            .withNativeAdOptions(NativeAdOptions.Builder().setVideoOptions(videoOptions).build())
             .build()
-
         adLoader?.loadAd(AdRequest.Builder().build())
     }
 
@@ -78,7 +78,7 @@ class NativeAdManager(private val context: Context) {
                     nativeAdListener?.onAdFailedToLoad(error)
                 }
             })
-            .withNativeAdOptions(NativeAdOptions.Builder().build())
+            .withNativeAdOptions(NativeAdOptions.Builder().setAdChoicesPlacement(NativeAdOptions.ADCHOICES_TOP_RIGHT).build())
             .build()
 
         adLoader?.loadAd(AdRequest.Builder().build())

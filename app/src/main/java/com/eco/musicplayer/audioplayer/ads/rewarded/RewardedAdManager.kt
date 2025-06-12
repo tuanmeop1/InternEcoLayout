@@ -4,6 +4,7 @@ import android.app.Activity
 import android.content.Context
 import android.util.Log
 import androidx.fragment.app.Fragment
+import com.eco.musicplayer.audioplayer.ads.BaseAdManager
 import com.eco.musicplayer.audioplayer.ads.FullScreenAdManager
 import com.eco.musicplayer.audioplayer.music.utils.CoinStorage
 import com.google.android.gms.ads.AdError
@@ -15,10 +16,12 @@ import com.google.android.gms.ads.OnUserEarnedRewardListener
 import com.google.android.gms.ads.rewarded.RewardedAd
 import com.google.android.gms.ads.rewarded.RewardedAdLoadCallback
 
-class RewardedAdManager(val context: Context, private val fullScreenAdManager: FullScreenAdManager) {
+class RewardedAdManager(val context: Context, private val fullScreenAdManager: FullScreenAdManager) :
+    BaseAdManager {
     private var adsUnitId: String = ""
     private var rewardedAdListener: RewardedAdListener? = null
     private var rewardedAd: RewardedAd? = null
+    private var isLoading: Boolean = false
     private val TAG = "RewardedAdManager"
 
     fun setAdUnitId(adUnitId: String) {
@@ -30,6 +33,8 @@ class RewardedAdManager(val context: Context, private val fullScreenAdManager: F
     }
 
     fun loadAd() {
+        if(isLoading || rewardedAd != null) return
+        isLoading = true
         RewardedAd.load(
             context,
             adsUnitId,
@@ -40,12 +45,14 @@ class RewardedAdManager(val context: Context, private val fullScreenAdManager: F
                     rewardedAd = ad
                     setupFullScreenContentCallback()
                     rewardedAdListener?.onAdLoaded()
+                    isLoading = false
                 }
 
                 override fun onAdFailedToLoad(adError: LoadAdError) {
                     Log.d("RewardedAdManager", adError.message)
                     rewardedAd = null
                     rewardedAdListener?.onAdFailedToLoad(adError)
+                    isLoading = false
                 }
             },
         )
@@ -67,6 +74,7 @@ class RewardedAdManager(val context: Context, private val fullScreenAdManager: F
                 rewardedAd = null
                 rewardedAdListener?.onAdDismissed()
                 fullScreenAdManager.onAdDismissed()
+                loadAd()
             }
 
             override fun onAdFailedToShowFullScreenContent(adError: AdError) {
@@ -80,7 +88,15 @@ class RewardedAdManager(val context: Context, private val fullScreenAdManager: F
         }
     }
 
-    fun showAd(activity: Activity) {
+    override fun isAdLoading(): Boolean {
+        return isLoading
+    }
+
+    override fun isAdLoaded(): Boolean {
+        return rewardedAd != null
+    }
+
+    override fun showAd(activity: Activity) {
         rewardedAd?.let { ad ->
             ad.show(activity, OnUserEarnedRewardListener { rewardItem ->
                 // Handle the reward.

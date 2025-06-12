@@ -10,6 +10,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
+import androidx.lifecycle.viewModelScope
 import com.eco.musicplayer.audioplayer.ads.app_open.AppOpenAdListener
 import com.eco.musicplayer.audioplayer.ads.app_open.AppOpenAdManager
 import com.eco.musicplayer.audioplayer.ads.banner.BannerAdPreloader
@@ -17,9 +18,12 @@ import com.eco.musicplayer.audioplayer.music.databinding.ActivitySplashBinding
 import com.eco.musicplayer.audioplayer.music.manager.BillingConnectionState
 import com.eco.musicplayer.audioplayer.music.manager.BillingManager
 import com.eco.musicplayer.audioplayer.music.ui.MainActivity
+import com.eco.musicplayer.audioplayer.music.ui.component.splash.viewmodel.SplashViewModel
 import com.eco.musicplayer.audioplayer.music.utils.AdsConstants
 import com.eco.musicplayer.audioplayer.music.utils.CountUpTimer
 import com.eco.musicplayer.audioplayer.music.utils.PurchaseStorage
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
@@ -37,7 +41,7 @@ class SplashActivity : AppCompatActivity(), AndroidScopeComponent {
     private val appOpenAdManager: AppOpenAdManager by inject()
 
     private val countUpTimer: CountUpTimer by lazy {
-        CountUpTimer(this, 100, 10000L)
+        CountUpTimer(lifecycleScope, 100, 10000L)
     }
     private var timerCompleted = false
     private var isPremium: Boolean? = null
@@ -58,17 +62,19 @@ class SplashActivity : AppCompatActivity(), AndroidScopeComponent {
         Log.d("SplashLog", "OnCreate: Checkpoint")
         setupUI()
 
-        if (purchaseStorage.isAnyProductAcknowledged()) goToMainScreen()
+        if (purchaseStorage.isAnyProductAcknowledged()) {
+            goToMainScreen()
+        } else {
+            setupBilling()
+            setupAppOpenAd()
+            setUpTimer()
 
-        setupBilling()
-        setupAppOpenAd()
-        setUpTimer()
-
-        countUpTimer.start()
-        lifecycleScope.launch {
-            delay(billingTimeDuration)
-            if (isBillingComplete) return@launch
-            isPremium = false
+            countUpTimer.start()
+            lifecycleScope.launch {
+                delay(billingTimeDuration)
+                if (isBillingComplete) return@launch
+                isPremium = false
+            }
         }
     }
 
@@ -131,7 +137,6 @@ class SplashActivity : AppCompatActivity(), AndroidScopeComponent {
 
     private fun setupBilling() {
         billingJob = lifecycleScope.launch {
-            try {
                 billingClient.connectInSplash()
 
                 repeatOnLifecycle(Lifecycle.State.STARTED) {
@@ -143,55 +148,22 @@ class SplashActivity : AppCompatActivity(), AndroidScopeComponent {
                                 goToMainScreen()
                             } else {
                                 isPremium = false
+
                             }
                             isBillingComplete = true
                         }
-//                        when (state) {
-//                            is BillingConnectionState.Connected -> {
-//
-//                                isBillingComplete = true
-//                                if (isPremium == true) {
-//                                    goToMainScreen()
-//                                }
-//
-//                                //purchaseStorage.fakePremium()
-//                            }
-//
-//                            is BillingConnectionState.Error -> {
-//                                Toast.makeText(
-//                                    this@SplashActivity,
-//                                    "Billing Error: ${state.code}",
-//                                    Toast.LENGTH_SHORT
-//                                ).show()
-//                                isBillingComplete = true
-//                                checkIfReadyToNavigate()
-//                            }
-//
-//                            BillingConnectionState.Connecting -> {
-//                                Log.d("SplashActivity", "Billing connecting...")
-//                            }
-//
-//                            BillingConnectionState.Disconnected -> {
-//                                billingClient.retryConnection()
-//                            }
-//                        }
                     }
                 }
-            } catch (e: Exception) {
-                Log.e("SplashActivity", "Billing flow failed", e)
-                isBillingComplete = true
-                checkIfReadyToNavigate()
-            }
         }
     }
 
     private fun setUpTimer() {
         countUpTimer.onTick = {
             if (isBillingComplete) {
-                if (!isPremium!!) if (appOpenAdManager.isAdAvailable()) {
-                    appOpenAdManager.showAdIfAvailable(this@SplashActivity)
-                } else {
-                    appOpenAdManager.loadAd(this@SplashActivity)
+                if (!isPremium!!) {
+                    if (appOpenAdManager.isAdAvailable()) {
+                        appOpenAdManager.showAdIfAvailable(this@SplashActivity)
+                    }
                 }
             }
         }
@@ -200,17 +172,6 @@ class SplashActivity : AppCompatActivity(), AndroidScopeComponent {
             if (appOpenAdManager.isAdAvailable()) {
                 appOpenAdManager.showAdIfAvailable(this@SplashActivity)
             } else goToMainScreen()
-        }
-    }
-
-    private fun checkIfReadyToNavigate() {
-        Log.d("SplashActivity", "Checking navigation: billing=$isBillingComplete, ad=$isAdComplete")
-        if (isPremium == true) {
-            goToMainScreen()
-        } else if (isPremium == false) {
-            appOpenAdManager.showAdIfAvailable(this@SplashActivity)
-        } else if (isPremium == null && timerCompleted) {
-            goToMainScreen()
         }
     }
 

@@ -100,14 +100,6 @@ class PaywallFragment : BaseFragmentBinding<FragmentPaywallBinding>(), AppOpenAd
         //createAnchorBannerAds()
         //createInlineBannerAds()
         createCollapsibleInlineBannerAds()
-//        val test = LoadFullScreenAdDialog()
-//        showDialog()
-        showDialog()
-    }
-
-    private fun showDialog() {
-        LoadFullScreenAdDialog(requireContext()).show()
-
     }
 
     override fun registerListeners() {

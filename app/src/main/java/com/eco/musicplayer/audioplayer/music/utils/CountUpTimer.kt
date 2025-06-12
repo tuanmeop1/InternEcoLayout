@@ -1,7 +1,6 @@
 package com.eco.musicplayer.audioplayer.music.utils
 
-import androidx.lifecycle.LifecycleOwner
-import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.LifecycleCoroutineScope
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
@@ -9,7 +8,7 @@ import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.launch
 
 class CountUpTimer(
-    private val lifecycleOwner: LifecycleOwner,
+    private val lifecycleScope: LifecycleCoroutineScope,
     private val maxTick: Int = 100,
     private val durationMillis: Long = 10000L,
 ) {
@@ -23,18 +22,23 @@ class CountUpTimer(
     var onComplete: (() -> Unit)? = null
 
     private fun createFlow(): Flow<Int> = flow {
-        for (i in currentTick until  maxTick) {
-            emit(currentTick + 1)
+        for (i in currentTick .. maxTick) {
+            currentTick = i
+            emit(currentTick)
             delay(delayPerStep)
         }
     }
 
     private fun collectTimer() {
-        job = lifecycleOwner.lifecycleScope.launch {
+        if (isRunning) return
+        isRunning = true
+
+        job = lifecycleScope.launch {
             createFlow().collect { tick ->
-                onTick?.let { it(tick) }
-                if (tick == maxTick) {
-                    onComplete?.let { it() }
+                if (!isRunning) return@collect
+                onTick?.invoke(tick)
+                if (tick >= maxTick) {
+                    onComplete?.invoke()
                     stop()
                 }
             }
@@ -43,16 +47,20 @@ class CountUpTimer(
 
     fun start() {
         stop()
+        currentTick = 1
         collectTimer()
     }
 
     fun resume() {
-        stop()
-        start()
+        if (!isRunning && currentTick < maxTick) {
+            collectTimer()
+        }
     }
 
     fun pause() {
-        stop()
+        isRunning = false
+        job?.cancel()
+        job = null
     }
 
     fun stop() {
@@ -63,9 +71,8 @@ class CountUpTimer(
 
     fun destroy() {
         stop()
+        currentTick = 0
         onTick = null
         onComplete = null
     }
-
 }
-

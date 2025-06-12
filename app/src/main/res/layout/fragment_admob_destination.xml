@@ -45,10 +45,9 @@
         <com.eco.musicplayer.audioplayer.ads.nativee.NativeView250
             android:id="@+id/adViewContainer"
             android:layout_width="match_parent"
-            android:layout_height="250dp"
+            android:layout_height="wrap_content"
             android:layout_alignParentBottom="true"
             android:layout_centerInParent="true"
-            android:background="@color/gray"
             android:layout_marginTop="@dimen/_40sdp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"

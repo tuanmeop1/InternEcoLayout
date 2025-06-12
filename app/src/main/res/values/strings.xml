@@ -186,5 +186,6 @@
     <string name="show_native_ad">Show Native Ad</string>
     <string name="admob_lover">Admob Lover</string>
     <string name="ad">Ads</string>
-
+    <string name="reward_dialog_title">ONCE-IN-A-LIFETIME REWARD!</string>
+    <string name="reward_dialog_message">Please watch our ad, you will get 20 coins</string>
 </resources>

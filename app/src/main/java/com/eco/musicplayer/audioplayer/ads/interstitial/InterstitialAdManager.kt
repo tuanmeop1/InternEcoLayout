@@ -4,6 +4,8 @@ import android.app.Activity
 import android.content.Context
 import android.util.Log
 import androidx.fragment.app.Fragment
+import com.eco.musicplayer.audioplayer.ads.AdCoolOffTime
+import com.eco.musicplayer.audioplayer.ads.BaseAdManager
 import com.eco.musicplayer.audioplayer.ads.FullScreenAdManager
 import com.google.android.gms.ads.AdError
 import com.google.android.gms.ads.AdRequest
@@ -12,11 +14,12 @@ import com.google.android.gms.ads.LoadAdError
 import com.google.android.gms.ads.interstitial.InterstitialAd
 import com.google.android.gms.ads.interstitial.InterstitialAdLoadCallback
 
-class InterstitialAdManager(val context: Context, private val fullScreenAdManager: FullScreenAdManager) {
+class InterstitialAdManager(val context: Context, private val fullScreenAdManager: FullScreenAdManager, private val adCoolOffTime: AdCoolOffTime):
+    BaseAdManager {
     private var adsUnitId: String = ""
     private var interstitialAdListener: InterstitialAdListener? = null
     private var interstitialAd: InterstitialAd? = null
-    private var shouldLoad: Boolean = true
+    private var isLoading: Boolean = false
 
     fun setAdUnitId(adUnitId: String) {
         adsUnitId = adUnitId
@@ -26,9 +29,15 @@ class InterstitialAdManager(val context: Context, private val fullScreenAdManage
         interstitialAdListener = listener
     }
 
-    fun loadInterstitialAd() {
-        if(!shouldLoad) return
-        shouldLoad = false
+    // Only show ad If Ad time is cooled off
+    fun shouldShowAd(): Boolean {
+        return adCoolOffTime.isAdCoolOff()
+    }
+
+    fun loadAd() {
+        if(isLoading || interstitialAd != null) return
+        isLoading = true
+        Log.d("InterstitialAdManager", "Loading interstitial ad in $context")
         InterstitialAd.load(
             context,
             adsUnitId,
@@ -38,27 +47,27 @@ class InterstitialAdManager(val context: Context, private val fullScreenAdManage
                 override fun onAdLoaded(ad: InterstitialAd) {
                     Log.d("InterstitialAdManager", "Ad was loaded.")
                     interstitialAd = ad
-                    setupFullScreenContentCallback()
                     interstitialAdListener?.onAdLoaded()
-                    shouldLoad = false
+                    isLoading = false
                 }
 
                 override fun onAdFailedToLoad(adError: LoadAdError) {
                     Log.d("InterstitialAdManager", adError.message)
                     interstitialAd = null
                     interstitialAdListener?.onAdFailedToLoad(adError)
-                    shouldLoad = true
+                    isLoading = false
                 }
             },
         )
 
     }
 
-    fun setupFullScreenContentCallback() {
+    private fun setupFullScreenContentCallback(action: ((Boolean) -> Unit)?=null) {
         interstitialAd?.fullScreenContentCallback = object : FullScreenContentCallback() {
             override fun onAdShowedFullScreenContent() {
                 Log.d("InterstitialAdManager", "Ad showing")
                 fullScreenAdManager.onAdStarted()
+                adCoolOffTime.setLastTimeFullScreenAdShow()
             }
 
             override fun onAdDismissedFullScreenContent() {
@@ -69,7 +78,8 @@ class InterstitialAdManager(val context: Context, private val fullScreenAdManage
                 interstitialAd = null
                 interstitialAdListener?.onAdDismissed()
                 fullScreenAdManager.onAdDismissed()
-                shouldLoad = true
+                action?.invoke(true)
+               // loadAd()
             }
 
             override fun onAdFailedToShowFullScreenContent(adError: AdError) {
@@ -79,12 +89,24 @@ class InterstitialAdManager(val context: Context, private val fullScreenAdManage
                 // don't show the ad a second time.
                 interstitialAd = null
                 interstitialAdListener?.onAdFailedToShow(adError)
+                action?.invoke(false)
+
             }
         }
     }
 
-    fun showAd(activity: Activity) {
+    override fun showAd(activity: Activity) {
         if(interstitialAd != null) {
+            setupFullScreenContentCallback()
+            interstitialAd?.show(activity)
+        } else {
+            Log.d("InterstitialAdManager", "The interstitial ad wasn't ready yet.")
+        }
+    }
+
+    override fun showAd(activity: Activity, action: ((Boolean) -> Unit)?) {
+        if(interstitialAd != null) {
+            setupFullScreenContentCallback(action)
             interstitialAd?.show(activity)
         } else {
             Log.d("InterstitialAdManager", "The interstitial ad wasn't ready yet.")
@@ -97,6 +119,14 @@ class InterstitialAdManager(val context: Context, private val fullScreenAdManage
         } else {
             Log.d("InterstitialAdManager", "The interstitial ad wasn't ready yet.")
         }
+    }
+
+    override fun isAdLoading(): Boolean {
+        return isLoading
+    }
+
+    override fun isAdLoaded(): Boolean {
+        return interstitialAd != null
     }
 
 }

@@ -1,13 +1,11 @@
 package com.eco.musicplayer.audioplayer.music.ui.component.admob_destination.fragment
 
-import android.os.Bundle
 import android.util.Log
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
-import androidx.fragment.app.Fragment
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
+import com.eco.musicplayer.audioplayer.ads.BaseAdManager
+import com.eco.musicplayer.audioplayer.ads.LoadFullScreenAdDialog
 import com.eco.musicplayer.audioplayer.ads.interstitial.InterstitialAdListener
 import com.eco.musicplayer.audioplayer.ads.interstitial.InterstitialAdManager
 import com.eco.musicplayer.audioplayer.ads.nativee.NativeAdListener
@@ -20,6 +18,7 @@ import com.eco.musicplayer.audioplayer.music.ui.base.AppOpenAdAllowed
 import com.eco.musicplayer.audioplayer.music.ui.base.BaseFragmentBinding
 import com.eco.musicplayer.audioplayer.music.utils.AdsConstants
 import com.eco.musicplayer.audioplayer.music.utils.CoinStorage
+import com.eco.musicplayer.audioplayer.music.utils.CountUpTimer
 import com.google.android.gms.ads.AdError
 import com.google.android.gms.ads.LoadAdError
 import org.koin.android.ext.android.inject
@@ -31,29 +30,27 @@ class AdmobDestinationFragment : BaseFragmentBinding<FragmentAdmobDestinationBin
     private val rewardedInterstitialAdManager: RewardedInterstitialAdManager by inject()
     private val nativeAdManager: NativeAdManager by inject()
     private val coinStorage: CoinStorage by inject()
-
-    private var isDisplayed: Boolean = false
-    private var isRIDisplayed: Boolean = false
     private val args: AdmobDestinationFragmentArgs by navArgs()
+
+    private val loadAdTimer: CountUpTimer by lazy {
+        CountUpTimer(lifecycleScope, 100, 3000)
+    }
+
+    private val showAdTimer: CountUpTimer by lazy {
+        CountUpTimer(lifecycleScope, 100, 1000)
+    }
 
     private val TAG = "AdmobDestinationFragment"
 
     override fun getContentViewId(): Int = R.layout.fragment_admob_destination
 
     override fun initializeData() {
-        isDisplayed = args.isDisplayed
-        isRIDisplayed = args.isRIDisplayed
+
     }
 
     override fun initializeViews() {
-        if (!isDisplayed) {
-            createInterstitialAd()
-        }
-
-        if (!isRIDisplayed) {
-            createRewardedInterstitialAd()
-        }
-
+        createInterstitialAd()
+        //createRewardedInterstitialAd()
         createNativeAd()
     }
 
@@ -63,8 +60,9 @@ class AdmobDestinationFragment : BaseFragmentBinding<FragmentAdmobDestinationBin
 
     override fun registerListeners() {
         binding.ivBack.setOnClickListener {
-            if (!isDisplayed) showInterstitialAd()
-            else if (!isRIDisplayed) showRewardedInterstitialAd()
+            if (interstitialAdManager.shouldShowAd()) {
+                showInterstitialAd()
+            }
             else findNavController().navigateUp()
             //else findNavController().navigate(AdmobDestinationFragmentDirections.actionAdmobDestinationFragmentToAdmobLoverFragment(isDisplayed))
         }
@@ -79,25 +77,26 @@ class AdmobDestinationFragment : BaseFragmentBinding<FragmentAdmobDestinationBin
 
             override fun onAdFailedToLoad(error: LoadAdError) {
                 Log.d(TAG, "Interstitial Banner Ad FAILED to load: ${error.message}")
+                loadFullScreenAdDialog.hideDialog()
+                findNavController().navigateUp()
             }
 
             override fun onAdDismissed() {
-                isDisplayed = true
                 Log.d(TAG, "Interstitial Banner Ad is dismissed")
+                loadFullScreenAdDialog.hideDialog()
+                loadAdTimer.destroy()
+                showAdTimer.destroy()
                 findNavController().navigateUp()
             }
 
             override fun onAdFailedToShow(adError: AdError) {
-                isDisplayed = false
                 Log.d(TAG, "Interstitial Ad FAILED to show: ${adError.message}")
+                loadFullScreenAdDialog.hideDialog()
+                findNavController().navigateUp()
             }
 
         })
-        interstitialAdManager.loadInterstitialAd()
-    }
-
-    private fun showInterstitialAd() {
-        interstitialAdManager.showAd(requireActivity())
+        interstitialAdManager.loadAd()
     }
 
     private fun createRewardedInterstitialAd() {
@@ -112,14 +111,12 @@ class AdmobDestinationFragment : BaseFragmentBinding<FragmentAdmobDestinationBin
             }
 
             override fun onAdDismissed() {
-                interstitialAdManager.loadInterstitialAd()
-                isRIDisplayed = true
+                interstitialAdManager.loadAd()
                 findNavController().navigateUp()
                 Log.d(TAG, "Rewarded Ad Dissmised")
             }
 
             override fun onAdFailedToShow(adError: AdError) {
-                isDisplayed = false
                 Log.d(TAG, "Rewarded Ad Failed to show: ${adError.message}")
             }
 
@@ -136,12 +133,42 @@ class AdmobDestinationFragment : BaseFragmentBinding<FragmentAdmobDestinationBin
         rewardedInterstitialAdManager.loadAd()
     }
 
+    private fun showInterstitialAd() {
+        setUpShowAdTimer(interstitialAdManager) {
+            findNavController().navigateUp()
+        }
+    }
+
+    private fun setUpShowAdTimer(adManager: BaseAdManager, action: (() -> Unit)) {
+        loadFullScreenAdDialog.showDialog()
+        if(interstitialAdManager.isAdLoading()) {
+            loadAdTimer.onTick = { adManager.showAd(requireActivity()) }
+            loadAdTimer.onComplete = {
+                if(adManager.isAdLoaded()) {
+                    adManager.showAd(requireActivity())
+                } else {
+                    action()
+                }
+            }
+            loadAdTimer.start()
+        } else if(adManager.isAdLoaded()) {
+            showAdTimer.onTick = { adManager.showAd(requireActivity()) }
+            showAdTimer.onComplete = {
+                adManager.showAd(requireActivity())
+            }
+            showAdTimer.start()
+        } else {
+            loadFullScreenAdDialog.hideDialog()
+        }
+    }
+
     private fun showRewardedInterstitialAd() {
         rewardedInterstitialAdManager.showAd(requireActivity())
     }
 
     private fun createNativeAd() {
-        nativeAdManager.setAdUnitId(AdsConstants.NATIVE_AD_UNIT_ID)
+        //nativeAdManager.setAdUnitId(AdsConstants.NATIVE_AD_UNIT_ID)
+        nativeAdManager.setAdUnitId(AdsConstants.NATIVE_VIDEO_AD_UNIT_ID)
         nativeAdManager.setListener(listener = object : NativeAdListener {
             override fun onAdLoaded() {
                 Log.d(TAG, "Native Ad Loaded Successfully")

@@ -4,6 +4,7 @@ import android.app.Activity
 import android.content.Context
 import android.util.Log
 import android.view.ViewGroup
+import com.eco.musicplayer.audioplayer.ads.AdCoolOffTime
 import com.eco.musicplayer.audioplayer.ads.FullScreenAdManager
 import com.eco.musicplayer.audioplayer.ads.banner.BannerAdListener
 import com.google.android.gms.ads.AdError
@@ -13,7 +14,7 @@ import com.google.android.gms.ads.LoadAdError
 import com.google.android.gms.ads.appopen.AppOpenAd
 import java.util.Date
 
-class AppOpenAdManager(private val fullScreenAdManager: FullScreenAdManager) {
+class AppOpenAdManager(private val fullScreenAdManager: FullScreenAdManager, private val adCoolOffTime: AdCoolOffTime) {
 
     private val TAG = "AppOpenAdManager"
     private var isLoadingAd = false
@@ -71,12 +72,12 @@ class AppOpenAdManager(private val fullScreenAdManager: FullScreenAdManager) {
         }
 
         // If the app open ad is not available yet, invoke the callback then load the ad.
-//        if (!isAdAvailable()) {
-//            Log.d(TAG, "The app open ad is not ready yet.")
-//            loadAd(activity)
-//            //appOpenAdListener?.onShowAdComplete()
-//            return
-//        }
+        if (!isAdAvailable()) {
+            Log.d(TAG, "The app open ad is not ready yet.")
+            loadAd(activity)
+            //appOpenAdListener?.onShowAdComplete()
+            return
+        }
 
         attachOverlayToActivity(activity)
 
@@ -111,6 +112,7 @@ class AppOpenAdManager(private val fullScreenAdManager: FullScreenAdManager) {
                 overlayView?.show()
                 appOpenAdListener?.onAdShowed()
                 fullScreenAdManager.onAdStarted()
+                adCoolOffTime.setLastTimeFullScreenAdShow()
 
             }
         }
@@ -144,6 +146,12 @@ class AppOpenAdManager(private val fullScreenAdManager: FullScreenAdManager) {
     /** Check if ad exists and can be shown. */
     fun isAdAvailable(): Boolean {
         return appOpenAd != null && wasLoadTimeLessThanNHoursAgo(4)
+    }
+
+    fun destroy() {
+        appOpenAd = null
+        this.appOpenAdListener = null
+        overlayView = null
     }
 
 }

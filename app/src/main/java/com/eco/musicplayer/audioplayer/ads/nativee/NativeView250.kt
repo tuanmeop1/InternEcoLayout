@@ -20,10 +20,30 @@ class NativeView250 @JvmOverloads constructor(
 
     fun loaded(ad: NativeAd) {
         binding?.let {
+            val nativeAdView = it.layoutRoot
+
             it.tvHeadline.text = ad.headline
-            it.layoutRoot.headlineView = it.tvHeadline
-            it.layoutRoot.mediaView = it.adMedia
-            it.layoutRoot.setNativeAd(ad)
+            it.btnAdCallToAction.text = ad.callToAction
+            it.tvAdDescription.text = ad.body
+            it.ivAppIcon.setImageDrawable(ad.icon?.drawable)
+            nativeAdView.apply {
+                headlineView = it.tvHeadline
+                mediaView = it.adMedia
+                ad.mediaContent?.hasVideoContent()
+                callToActionView = it.btnAdCallToAction
+                setNativeAd(ad)
+            }
+
+            //Star-rating
+            if (ad.starRating != null && ad.starRating!! > 0.0) {
+                it.ratingBar.rating = ad.starRating!!.toFloat()
+                it.ratingBar.visibility = VISIBLE
+                nativeAdView.starRatingView = it.ratingBar
+            } else {
+                it.ratingBar.visibility = GONE
+            }
+
+
         }
     }
 }

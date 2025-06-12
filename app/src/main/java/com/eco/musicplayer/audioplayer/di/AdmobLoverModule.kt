@@ -1,6 +1,7 @@
 package com.eco.musicplayer.audioplayer.di
 
 
+import com.eco.musicplayer.audioplayer.ads.AdCoolOffTime
 import com.eco.musicplayer.audioplayer.ads.FullScreenAdManager
 import com.eco.musicplayer.audioplayer.ads.app_open.AppOpenAdApplication
 import com.eco.musicplayer.audioplayer.ads.app_open.AppOpenAdManager
@@ -24,7 +25,7 @@ val admobLoverModule = module {
     }
 
     factory {
-        InterstitialAdManager(context = androidContext(), fullScreenAdManager = get())
+        InterstitialAdManager(context = androidContext(), fullScreenAdManager = get(), adCoolOffTime = get())
     }
 
     factory {
@@ -40,15 +41,19 @@ val admobLoverModule = module {
     }
 
     single {
+        AdCoolOffTime()
+    }
+
+    single {
         FullScreenAdManager()
     }
 
     single(named("Global")) {
-        AppOpenAdManager(fullScreenAdManager = get())
+        AppOpenAdManager(fullScreenAdManager = get(), adCoolOffTime = get())
     }
 
     scope<SplashActivity> {
-        scoped { AppOpenAdManager(fullScreenAdManager = get()) }
+        scoped { AppOpenAdManager(fullScreenAdManager = get(), adCoolOffTime = get()) }
     }
 
     single {

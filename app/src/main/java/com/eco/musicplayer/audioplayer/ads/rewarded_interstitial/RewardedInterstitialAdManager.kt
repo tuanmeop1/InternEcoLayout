@@ -4,6 +4,7 @@ import android.app.Activity
 import android.content.Context
 import android.util.Log
 import androidx.fragment.app.Fragment
+import com.eco.musicplayer.audioplayer.ads.BaseAdManager
 import com.eco.musicplayer.audioplayer.ads.FullScreenAdManager
 import com.google.android.gms.ads.*
 import com.google.android.gms.ads.rewarded.RewardItem
@@ -13,12 +14,13 @@ import com.google.android.gms.ads.rewardedinterstitial.RewardedInterstitialAdLoa
 class RewardedInterstitialAdManager(
     private val context: Context,
     private val fullScreenAdManager: FullScreenAdManager
-) {
+) : BaseAdManager {
 
     private val TAG = "RewardedInterstitialAdMgr"
     private var rewardedInterstitialAd: RewardedInterstitialAd? = null
     private var adUnitId: String = ""
     private var listener: RewardedInterstitialAdListener? = null
+    private var isLoading: Boolean = false
 
     fun setAdUnitId(unitId: String) {
         adUnitId = unitId
@@ -29,6 +31,8 @@ class RewardedInterstitialAdManager(
     }
 
     fun loadAd() {
+        if(isLoading || rewardedInterstitialAd != null) return
+        isLoading = true
         RewardedInterstitialAd.load(
             context,
             adUnitId,
@@ -39,12 +43,14 @@ class RewardedInterstitialAdManager(
                     rewardedInterstitialAd = ad
                     setFullScreenContentCallback()
                     listener?.onAdLoaded()
+                    isLoading = false
                 }
 
                 override fun onAdFailedToLoad(error: LoadAdError) {
                     Log.e(TAG, "Failed to load ad: ${error.message}")
                     rewardedInterstitialAd = null
                     listener?.onAdFailedToLoad(error)
+                    isLoading = false
                 }
             }
         )
@@ -70,6 +76,7 @@ class RewardedInterstitialAdManager(
                 rewardedInterstitialAd = null
                 listener?.onAdDismissed()
                 fullScreenAdManager.onAdDismissed()
+                loadAd()
             }
 
             override fun onAdFailedToShowFullScreenContent(adError: AdError) {
@@ -80,7 +87,15 @@ class RewardedInterstitialAdManager(
         }
     }
 
-    fun showAd(activity: Activity) {
+    override fun isAdLoading(): Boolean {
+        return isLoading
+    }
+
+    override fun isAdLoaded(): Boolean {
+        return rewardedInterstitialAd != null
+    }
+
+    override fun showAd(activity: Activity) {
         if (rewardedInterstitialAd != null) {
             rewardedInterstitialAd?.show(activity) { rewardItem: RewardItem ->
                 Log.d(TAG, "User earned reward: ${rewardItem.amount} ${rewardItem.type}")

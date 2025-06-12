@@ -1,11 +1,10 @@
 package com.eco.musicplayer.audioplayer.music.ui.component.admob.fragment
 
-import android.os.Bundle
 import android.util.Log
-import androidx.fragment.app.Fragment
-import android.view.LayoutInflater
-import android.view.View
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
+import com.eco.musicplayer.audioplayer.ads.BaseAdManager
+import com.eco.musicplayer.audioplayer.ads.RewardDialog
 import com.eco.musicplayer.audioplayer.ads.interstitial.InterstitialAdListener
 import com.eco.musicplayer.audioplayer.ads.interstitial.InterstitialAdManager
 import com.eco.musicplayer.audioplayer.ads.rewarded.RewardedAdListener
@@ -19,6 +18,7 @@ import com.eco.musicplayer.audioplayer.music.ui.base.BaseFragmentBinding
 import com.eco.musicplayer.audioplayer.music.ui.component.admob.viewmodel.AdmobLoverViewModel
 import com.eco.musicplayer.audioplayer.music.utils.AdsConstants
 import com.eco.musicplayer.audioplayer.music.utils.CoinStorage
+import com.eco.musicplayer.audioplayer.music.utils.CountUpTimer
 import com.google.android.gms.ads.AdError
 import com.google.android.gms.ads.LoadAdError
 import org.koin.android.ext.android.inject
@@ -26,8 +26,6 @@ import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class AdmobLoverFragment : BaseFragmentBinding<FragmentAdmobLoverBinding>(), AppOpenAdAllowed {
 
-    private var isDisplayed: Boolean = false
-    private var isRIDisplayed: Boolean = false
     private val TAG = "AdmobLoverFragment"
 
     private val coinStorage: CoinStorage by inject()
@@ -37,19 +35,41 @@ class AdmobLoverFragment : BaseFragmentBinding<FragmentAdmobLoverBinding>(), App
 
     private val viewModel: AdmobLoverViewModel by viewModel()
 
+    private val rewardAdDialog: RewardDialog by lazy {
+        RewardDialog()
+    }
+
+    private val loadAdTimer: CountUpTimer by lazy {
+        CountUpTimer(lifecycleScope, 100, 3000)
+    }
+
+    private val showAdTimer: CountUpTimer by lazy {
+        CountUpTimer(lifecycleScope, 100, 1000)
+    }
+
     override fun getContentViewId(): Int = R.layout.fragment_admob_lover
 
+    override fun onResume() {
+        super.onResume()
+
+        loadAdTimer.resume()
+        showAdTimer.resume()
+    }
+
+    override fun onPause() {
+        super.onPause()
+        loadAdTimer.pause()
+        showAdTimer.pause()
+    }
 
     override fun initializeData() {
+        Log.d(TAG, this.toString())
         //isDisplayed = args.isDisplayed
     }
 
     override fun initializeViews() {
-        if(!isDisplayed) {
-            createInterstitialAd()
-        }
-
-        if(!isRIDisplayed) createRewardedInterstitialAd()
+        createInterstitialAd()
+        createRewardedInterstitialAd()
         createRewardedAd()
         initObserver()
     }
@@ -62,17 +82,21 @@ class AdmobLoverFragment : BaseFragmentBinding<FragmentAdmobLoverBinding>(), App
 
     override fun registerListeners() {
         binding.llShowInterstitialAd.setOnClickListener {
-            if(!isDisplayed) showInterstitialAd()
-            else findNavController().navigate(AdmobLoverFragmentDirections.actionAdmobLoverFragmentToAdmobDestinationFragment(isDisplayed, isRIDisplayed))
+            if (interstitialAdManager.shouldShowAd()) {
+                showInterstitialAd()
+            } else {
+                findNavController().navigate(R.id.action_admobLoverFragment_to_admobDestinationFragment)
+            }
         }
 
         binding.llShowRewardedInterstitialAd.setOnClickListener {
-            if(!isRIDisplayed) showRewardedInterstitialAd()
-            else findNavController().navigate(AdmobLoverFragmentDirections.actionAdmobLoverFragmentToAdmobDestinationFragment(isDisplayed, isRIDisplayed))
+            showRewardedInterstitialAd()
         }
 
         binding.llShowRewaredAd.setOnClickListener {
-            showRewardedAd()
+            showRewardDialog(onRewardAccepted = {
+                showRewardedAd()
+            })
         }
 
         binding.ivClose.setOnClickListener {
@@ -89,22 +113,26 @@ class AdmobLoverFragment : BaseFragmentBinding<FragmentAdmobLoverBinding>(), App
 
             override fun onAdFailedToLoad(error: LoadAdError) {
                 Log.d(TAG, "Interstitial Ad FAILED to load")
+                loadFullScreenAdDialog.hideDialog()
+                findNavController().navigate(R.id.action_admobLoverFragment_to_admobDestinationFragment)
             }
 
             override fun onAdDismissed() {
-                isDisplayed = true
                 Log.d(TAG, "Interstitial Ad is dismissed")
-                Log.d(TAG, "showInterstitialAd: $isDisplayed")
-                findNavController().navigate(AdmobLoverFragmentDirections.actionAdmobLoverFragmentToAdmobDestinationFragment(isDisplayed, isRIDisplayed))
+                loadFullScreenAdDialog.hideDialog()
+                loadAdTimer.destroy()
+                showAdTimer.destroy()
+                findNavController().navigate(R.id.action_admobLoverFragment_to_admobDestinationFragment)
             }
 
             override fun onAdFailedToShow(adError: AdError) {
-                isDisplayed = false
                 Log.d(TAG, "Interstitial Ad FAILED to show: ${adError.message}")
+                loadFullScreenAdDialog.hideDialog()
+                findNavController().navigate(R.id.action_admobLoverFragment_to_admobDestinationFragment)
             }
 
         })
-        interstitialAdManager.loadInterstitialAd()
+        interstitialAdManager.loadAd()
     }
 
     private fun createRewardedAd() {
@@ -116,15 +144,20 @@ class AdmobLoverFragment : BaseFragmentBinding<FragmentAdmobLoverBinding>(), App
 
             override fun onAdFailedToLoad(error: LoadAdError) {
                 Log.d(TAG, "Rewarded Ad FAILED to load")
+                loadFullScreenAdDialog.hideDialog()
             }
 
             override fun onAdDismissed() {
                 rewardedAdManager.loadAd()
+                loadFullScreenAdDialog.hideDialog()
+                loadAdTimer.destroy()
+                showAdTimer.destroy()
                 Log.d(TAG, "Rewarded Ad Dissmised")
             }
 
             override fun onAdFailedToShow(adError: AdError) {
                 Log.d(TAG, "Rewarded Ad Failed to show: ${adError.message}")
+                loadFullScreenAdDialog.hideDialog()
             }
 
             override fun onUserEarnedReward(amount: Int) {
@@ -146,17 +179,22 @@ class AdmobLoverFragment : BaseFragmentBinding<FragmentAdmobLoverBinding>(), App
 
             override fun onAdFailedToLoad(error: LoadAdError) {
                 Log.d(TAG, "Rewarded Interstitial Ad FAILED to load")
+                loadFullScreenAdDialog.hideDialog()
+                findNavController().navigate(R.id.action_admobLoverFragment_to_admobDestinationFragment)
             }
 
             override fun onAdDismissed() {
-                isRIDisplayed = true
-                Log.d(TAG, "Rewarded Ad Dissmised")
-                findNavController().navigate(AdmobLoverFragmentDirections.actionAdmobLoverFragmentToAdmobDestinationFragment(isDisplayed, isRIDisplayed))
+                Log.d(TAG, "Rewarded Ad Dismissed")
+                loadFullScreenAdDialog.hideDialog()
+                loadAdTimer.destroy()
+                showAdTimer.destroy()
+                findNavController().navigate(R.id.action_admobLoverFragment_to_admobDestinationFragment)
             }
 
             override fun onAdFailedToShow(adError: AdError) {
-                isRIDisplayed = false
                 Log.d(TAG, "Rewarded Ad Failed to show: ${adError.message}")
+                loadFullScreenAdDialog.hideDialog()
+                findNavController().navigate(R.id.action_admobLoverFragment_to_admobDestinationFragment)
             }
 
             override fun onAdNotReady() {
@@ -165,6 +203,7 @@ class AdmobLoverFragment : BaseFragmentBinding<FragmentAdmobLoverBinding>(), App
 
             override fun onUserEarnedReward(amount: Int) {
                 coinStorage.addCoin(amount)
+                viewModel.addCoins(amount)
             }
 
         })
@@ -173,14 +212,55 @@ class AdmobLoverFragment : BaseFragmentBinding<FragmentAdmobLoverBinding>(), App
     }
 
     private fun showRewardedInterstitialAd() {
-        rewardedInterstitialAdManager.showAd(requireActivity())
+        setUpShowAdTimer(rewardedInterstitialAdManager) {
+            loadFullScreenAdDialog.hideDialog()
+            findNavController().navigate(R.id.action_admobLoverFragment_to_admobDestinationFragment)
+        }
     }
 
     private fun showRewardedAd() {
-        rewardedAdManager.showAd(requireActivity())
+        setUpShowAdTimer(rewardedAdManager) {
+            loadFullScreenAdDialog.hideDialog()
+        }
     }
 
     private fun showInterstitialAd() {
-        interstitialAdManager.showAd(requireActivity())
+        showAd(interstitialAdManager) {
+            findNavController().navigate(R.id.action_admobLoverFragment_to_admobDestinationFragment)
+        }
+
+//        setUpShowAdTimer(interstitialAdManager) {
+//            loadFullScreenAdDialog.hideDialog()
+//            findNavController().navigate(R.id.action_admobLoverFragment_to_admobDestinationFragment)
+//        }
+    }
+
+    private fun setUpShowAdTimer(adManager: BaseAdManager, action: (() -> Unit)) {
+        loadFullScreenAdDialog.showDialog()
+        if(adManager.isAdLoading()) {
+            loadAdTimer.onTick = { adManager.showAd(requireActivity()) }
+            loadAdTimer.onComplete = {
+                if(adManager.isAdLoaded()) {
+                    adManager.showAd(requireActivity())
+                } else {
+                    action()
+                }
+            }
+            loadAdTimer.start()
+        } else if(adManager.isAdLoaded()) {
+            showAdTimer.onTick = { adManager.showAd(requireActivity()) }
+            showAdTimer.onComplete = {
+                adManager.showAd(requireActivity())
+            }
+            showAdTimer.start()
+        } else {
+            action()
+        }
+    }
+
+    private fun showRewardDialog(onRewardAccepted: () -> Unit) {
+        val dialog = RewardDialog()
+        dialog.onRewardAccepted = onRewardAccepted
+        dialog.showDialog(parentFragmentManager)
     }
 }
